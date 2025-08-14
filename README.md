@@ -27,9 +27,10 @@ Documentation: Outputs and results are captured in docs/submission.pdf for easy 
 
 This project highlights practical skills in automation, configuration management, CI/CD, and infrastructure reliability, making it a strong demonstration of DevOps and infrastructure engineering expertise.
 
-Automation Pipeline Diagram
-<a href="docs/automation-pipeline.png"> <img src="docs/automation-pipeline.png" alt="Automation Pipeline" width="600"> </a>
-Features
+## Automation Pipeline Diagram
+<a href="docs/automation-pipeline.png">
+  <img src="docs/automation-pipeline.png" alt="Automation Pipeline" width="450">
+</a>
 
 Automated server and application setup using Ansible roles and playbooks.
 
