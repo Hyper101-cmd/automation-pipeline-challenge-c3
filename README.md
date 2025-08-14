@@ -27,7 +27,9 @@ Documentation: Outputs and results are captured in docs/submission.pdf for easy 
 
 This project highlights practical skills in automation, configuration management, CI/CD, and infrastructure reliability, making it a strong demonstration of DevOps and infrastructure engineering expertise.
 
-Automation Pipeline Diagram
+## Automation Pipeline Diagram
+[![Automation Pipeline](docs/automation-pipeline.png)](docs/automation-pipeline.png)
+
 
 Features
 
