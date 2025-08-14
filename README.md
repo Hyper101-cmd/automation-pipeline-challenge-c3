@@ -91,18 +91,17 @@ Run maintenance tasks (optional):
 
 ansible-playbook -i ansible/inventories/hosts.ini ansible/playbooks/maintenance.yml
 
-
 Generate or manage certificates:
 
 ansible-playbook -i ansible/inventories/hosts.ini ansible/playbooks/certs_create.yml
 
-CI/CD Integration
+## **CI/CD Integration**
 
 .gitlab-ci.yml defines the pipeline for automated testing and deployment of playbooks.
 
 Pipeline stages include syntax checking, role linting, and deployment validation.
 
-Contributing
+## **Contributing**
 
 Contributions are welcome. To contribute:
 
@@ -116,7 +115,7 @@ Push to the branch (git push origin feature/your-feature).
 
 Open a pull request.
 
-License
+## **License**
 
 This project is licensed under the MIT License.
 
