@@ -27,6 +27,8 @@ Documentation: Outputs and results are captured in docs/submission.pdf for easy 
 
 This project highlights practical skills in automation, configuration management, CI/CD, and infrastructure reliability, making it a strong demonstration of DevOps and infrastructure engineering expertise.
 
+Automation Pipeline Diagram
+
 Features
 
 Automated server and application setup using Ansible roles and playbooks.
@@ -125,4 +127,5 @@ Push to the branch (git push origin feature/your-feature).
 Open a pull request.
 
 License
+
 This project is licensed under the MIT License.
