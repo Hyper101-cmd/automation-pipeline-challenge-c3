@@ -41,7 +41,8 @@ Modular inventory and variable management for multiple environments.
 
 Documentation of setup and outputs in docs/submission.pdf.
 
-Repository Structure
+## Repository Structure
+```text
 automation-pipeline-challenge-c3/
 ├── ansible/
 │   ├── inventories/
