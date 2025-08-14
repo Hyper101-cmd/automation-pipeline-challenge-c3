@@ -70,7 +70,7 @@ automation-pipeline-challenge-c3/
 ├── README.md
 └── docs/
     └── submission.pdf
-
+```
 
 ## How the Roles Work
 
