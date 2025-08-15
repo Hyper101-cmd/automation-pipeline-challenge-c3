@@ -47,3 +47,7 @@ terraform.tfvars
 !ansible/ansible.cfg
 
 !.gitlab-ci.yml
+
+# Allow Helm and demo K8s YAMLs
+!demo-api/helm/**/*.yaml
+!demo-api/k8s/*.yaml
