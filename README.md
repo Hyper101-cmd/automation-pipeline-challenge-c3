@@ -242,8 +242,11 @@ You should see:
 Demo Media API listening on :8080
 
 4. **Test the endpoints from a second terminal:**
-*Health check*
+
+Health check
+
 curl -fsSL http://localhost:8080/healthz
+
  -> OK
 
 Example search
