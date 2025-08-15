@@ -76,6 +76,15 @@ automation-pipeline-challenge-c3/
 │   │   ├── maintenance.yml
 │   │   └── certs_create.yml
 │   └── ansible.cfg
+├── demo-api/
+│   ├── Dockerfile
+│   ├── package.json
+│   ├── server.js
+│   └── helm/
+│       └── demo-media-api/
+│           ├── README.md
+│           └── templates/
+│               └── _helpers.tpl
 ├── .gitlab-ci.yml
 ├── README.md
 └── docs/
