@@ -13,7 +13,57 @@ The **Automation Pipeline Challenge C3** demonstrates an end-to-end automation s
 Key highlights of this project:  
 - **Infrastructure as Code (IaC):** Using Ansible roles and playbooks to standardize deployment and configuration.  
 - **Modular Architecture:** Roles for NGINX, Zabbix agent, and maintenance tasks allow reusability and easier maintenance.  
-- **CI/CD Integration:** Automated testing and deployment through GitLab CI/CD ensures reliable and repeatable processes.  
+- **CI/CD Integration:** Automated testing and deployment through GitLab CI/CD ensures reliable and repeatable processes.
+- ### CI/CD Pipeline (GitLab)
+
+**Goals**
+- Enforce quality with static checks (YAML, Ansible lint, syntax)
+- Build the API container and push to GitLab Container Registry
+- Deploy with gates (dev → staging → prod), with smoke tests after each deploy
+- Provide a one-click rollback
+
+**Stages & jobs**
+1. **validate**  
+   - `yamllint`, `ansible-lint`  
+   - `ansible-playbook --syntax-check`  
+   - Render templates to `ansible/temp/` (no servers)
+
+2. **build**  
+   - Build `api` Docker image and push to `$CI_REGISTRY_IMAGE` (tags: `latest` + `$CI_COMMIT_SHORT_SHA`)
+
+3. **deploy**  
+   - Use **Ansible** to update LB/web (or **Helm** if using Kubernetes)
+   - Pass the built image tag via `api_image=$CI_REGISTRY_IMAGE/api:$CI_COMMIT_SHORT_SHA`
+
+4. **smoke**  
+   - `curl -kSf https://$ENV_LB_URL/healthz` to validate
+
+5. **promote**  
+   - Manual approvals to advance between environments
+
+6. **rollback**  
+   - Manual job; pin `ROLLBACK_IMAGE_TAG` to revert
+
+**Secrets & environment config**
+- **Secrets**: store as **masked, protected** GitLab CI/CD variables:
+  - `SSH_PRIVATE_KEY` (for Ansible SSH)
+  - `ANSIBLE_VAULT_PASSWORD` (if using Ansible Vault)
+  - `$DEV_LB_URL`, `$STAGING_LB_URL`, `$PROD_LB_URL`
+  - (If pushing to an external registry: `REGISTRY_USER`, `REGISTRY_PASSWORD`)
+- **Environment-scoped variables**: define different values per environment (GitLab → Settings → CI/CD → Variables).
+- **Vault options**:
+  - GitLab’s **HashiCorp Vault** integration (preferred for sensitive creds)
+  - Or **Ansible Vault** for `group_vars/*` with `--vault-password-file`.
+- **Configs per env**:
+  - Option A: separate inventories (`inventories/dev.ini`, etc.)
+  - Option B: shared inventory with `group_vars/dev.yml`, `group_vars/staging.yml`, `group_vars/prod.yml` and `--limit`/`-e env=…`.
+
+**Rollback strategy**
+- **Containerized**: redeploy a previous image tag (`ROLLBACK_IMAGE_TAG`) or `helm rollback` to a prior revision.
+- **Ansible-only**: maintain a `previous` symlink or var with last-known-good artifact and redeploy it on rollback.
+
+> This pipeline is intentionally light: it demonstrates testing, build, deploy, smoke, promotion, and rollback without requiring access to your private infrastructure. It can be mirrored into GitLab to run as-is.
+
 - **Scalability:** Inventory and variable management allow the playbooks to be applied to multiple environments or hosts without changes to core logic.  
 - **Documentation:** Outputs and results are captured in `docs/submission.pdf` for easy review and validation.  
 
