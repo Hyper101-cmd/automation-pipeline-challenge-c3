@@ -1,8 +1,5 @@
 # **Automation Pipeline Challenge C3**
 
-[![Ansible](https://img.shields.io/badge/Ansible-2.14+-blue)](https://www.ansible.com/)  
-[![Python](https://img.shields.io/badge/Python-3.11+-blue)](https://www.python.org/)  
-[![GitLab CI](https://img.shields.io/badge/GitLab-CI/CD-orange)](https://about.gitlab.com/stages-devops-lifecycle/continuous-integration/)  
 <p align="center">
   <a href="https://codesandbox.io/p/github/joycemwangi/automation-pipeline-challenge-c3/main" target="_blank">
     <img src="https://img.shields.io/badge/Open%20in-CodeSandbox-blue?logo=codesandbox" alt="Open in CodeSandbox">
@@ -10,6 +7,20 @@
   &nbsp;
   <a href="https://kncqz4-8080.csb.app/healthz" target="_blank">
     <img src="https://img.shields.io/badge/Live%20Demo-OK-green" alt="Live Demo (/healthz)">
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://www.ansible.com/">
+    <img src="https://img.shields.io/badge/Ansible-2.14+-blue" alt="Ansible">
+  </a>
+  &nbsp;
+  <a href="https://www.python.org/">
+    <img src="https://img.shields.io/badge/Python-3.11+-blue" alt="Python">
+  </a>
+  &nbsp;
+  <a href="https://about.gitlab.com/stages-devops-lifecycle/continuous-integration/">
+    <img src="https://img.shields.io/badge/GitLab-CI/CD-orange" alt="GitLab CI/CD">
   </a>
 </p>
 
