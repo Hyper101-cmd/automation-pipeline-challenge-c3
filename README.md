@@ -101,7 +101,7 @@ ansible-playbook -i ansible/inventories/hosts.ini ansible/playbooks/certs_create
 
 Pipeline stages include syntax checking, role linting, and deployment validation.
 
-Contributing
+## **Contributing**
 
 Contributions are welcome. To contribute:
 
