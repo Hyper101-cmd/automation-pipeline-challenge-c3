@@ -1,0 +1,39 @@
+---
+- name: Render templates locally for validation
+  hosts: all
+  gather_facts: false
+  vars:
+    nginx_upstreams: ["127.0.0.1"]
+    server_name: "example.local"
+    ssl_cert_path: /etc/ssl/certs/imago-selfsigned.crt
+    ssl_key_path:  /etc/ssl/private/imago-selfsigned.key
+    nginx_listen_port: 80
+    nginx_listen_port_tls: 443
+    nginx_app_port: 8080
+    nginx_proxy_port: 80
+
+    # Zabbix vars for localhost render
+    zabbix_server: 127.0.0.1
+    zabbix_agent_server_active: 127.0.0.1
+    zabbix_agent_hostname_item: system.hostname
+
+  tasks:
+    - name: Render LB vhost to temp
+      ansible.builtin.template:
+        src: "{{ playbook_dir }}/../roles/nginx/templates/site.conf.j2"
+        dest: "{{ playbook_dir }}/../temp/site-lb.conf"
+      vars:
+        nginx_is_load_balancer: true
+
+    - name: Render Web vhost (static mode) to temp
+      ansible.builtin.template:
+        src: "{{ playbook_dir }}/../roles/nginx/templates/site.conf.j2"
+        dest: "{{ playbook_dir }}/../temp/site-web.conf"
+      vars:
+        nginx_is_load_balancer: false
+        nginx_proxy_local: false
+
+    - name: Render Zabbix agent config to temp
+      ansible.builtin.template:
+        src: "{{ playbook_dir }}/../roles/zabbix_agent/templates/zabbix_agentd.conf.j2"
+        dest: "{{ playbook_dir }}/../temp/zabbix_agentd.conf"
