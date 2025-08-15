@@ -178,7 +178,8 @@ zabbix_agentd.conf
 
 ## **CI/CD Pipeline (GitLab)**
 
-Automates testing, build, deployment, and rollback for the API on Kubernetes.
+Automates testing, build, deployment, and rollback for the API on Kubernetes.  
+The complete pipeline definition is available in [`.gitlab-ci.yml`](./.gitlab-ci.yml).
 
 **Goals**
 - Enforce quality through YAML linting, Ansible lint, and syntax checking.
