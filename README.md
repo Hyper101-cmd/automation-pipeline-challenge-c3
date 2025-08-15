@@ -83,13 +83,13 @@ automation-pipeline-challenge-c3/
 │   └── helm/
 │       └── demo-media-api/
 │           ├── README.md
-│           └── templates/
-│               └── _helpers.tpl
+│           └── templates/_helpers.tpl
 ├── .gitlab-ci.yml
 ├── README.md
 └── docs/
     └── submission.pdf
 ```
+
 ## **How the Roles Work**
 
 | Role             | Purpose                               | Key Tasks                                                                 |
