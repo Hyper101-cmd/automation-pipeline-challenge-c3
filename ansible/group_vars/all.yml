@@ -1,0 +1,37 @@
+# ansible/group_vars/all.yml
+# ---------- NGINX ----------
+nginx_worker_processes: auto
+server_name: "_"                      # change to FQDN in prod
+
+# TLS paths used by both LB and web nodes
+ssl_cert_path: /etc/ssl/certs/imago-selfsigned.crt
+ssl_key_path:  /etc/ssl/private/imago-selfsigned.key
+
+# Common ports
+nginx_listen_port: 80                 # HTTP (redirects to HTTPS)
+nginx_listen_port_tls: 443            # HTTPS
+nginx_app_port: 8080                  # local app port on web nodes (if proxying)
+nginx_proxy_port: 80                  # upstream port on web nodes for LB
+
+# Web/LB behavior toggles (can be overridden per-host/group in site.yml)
+nginx_is_load_balancer: false         # site.yml sets true on [lb]
+nginx_proxy_local: false              # set true on web nodes if proxying to 127.0.0.1:{{ nginx_app_port }}
+
+# Logging (optional, your template uses these files implicitly)
+nginx_lb_access_log:  /var/log/nginx/lb_access.log
+nginx_lb_error_log:   /var/log/nginx/lb_error.log
+nginx_web_access_log: /var/log/nginx/web_access.log
+nginx_web_error_log:  /var/log/nginx/web_error.log
+
+# Health endpoint
+nginx_health_path: /healthz
+
+# ---------- ZABBIX AGENT ----------
+zabbix_server: 192.168.10.5
+zabbix_agent_packages:
+  - zabbix-agent
+zabbix_agent_server_active: "{{ zabbix_server }}"
+zabbix_agent_hostname_item: system.hostname
+
+# ---------- OS / PKG ----------
+pkg_mgr: apt

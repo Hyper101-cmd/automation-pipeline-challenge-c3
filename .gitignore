@@ -25,3 +25,6 @@ terraform.tfvars
 
 # Allow main playbooks
 !ansible/playbooks/*.yml
+
+# Allow group vars
+!ansible/group_vars/*.yml
