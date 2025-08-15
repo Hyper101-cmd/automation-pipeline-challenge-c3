@@ -1,0 +1,180 @@
+# .gitlab-ci.yml — CI/CD for API + Ansible infra
+# Stages:
+# - validate: lint YAML/Ansible and render templates (no servers)
+# - build: build & push API image
+# - deploy: deploy to envs via Ansible (or Helm if you containerize infra)
+# - smoke: health checks after deploy
+# - promote: manual gates to advance
+# - rollback: manual job to revert to a previous image
+
+stages: [validate, build, deploy, smoke, promote, rollback]
+
+default:
+  cache:
+    key: "$CI_COMMIT_REF_SLUG"
+    paths:
+      - .cache/pip
+
+# -------- VALIDATION (static, no servers) --------
+validate:lint-and-syntax:
+  image: python:3.12-slim
+  stage: validate
+  before_script:
+    - python -V
+    - pip install --upgrade pip
+    - pip install ansible ansible-lint yamllint
+  script:
+    - yamllint ansible
+    - ansible-lint
+    - ansible-playbook -i ansible/inventories/localhost.ini ansible/playbooks/site.yml --syntax-check
+    - ansible-playbook -i ansible/inventories/localhost.ini ansible/playbooks/certs_create.yml --syntax-check
+    - ansible-playbook -i ansible/inventories/localhost.ini ansible/playbooks/render_templates.yml
+  artifacts:
+    paths:
+      - ansible/temp/
+    expire_in: 7 days
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH
+
+# -------- BUILD (containerize the API) --------
+build:docker-image:
+  image: docker:24
+  services: ["docker:24-dind"]
+  stage: build
+  variables:
+    DOCKER_DRIVER: overlay2
+  before_script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
+  script:
+    # Expect a Dockerfile in the repo root for the API
+    - docker build -t "$CI_REGISTRY_IMAGE/api:$CI_COMMIT_SHORT_SHA" -t "$CI_REGISTRY_IMAGE/api:latest" .
+    - docker push "$CI_REGISTRY_IMAGE/api:$CI_COMMIT_SHORT_SHA"
+    - docker push "$CI_REGISTRY_IMAGE/api:latest"
+  needs: ["validate:lint-and-syntax"]
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: on_success
+
+# -------- DEPLOY (Ansible to LB+web, or swap for Helm) --------
+.deploy_template: &deploy_template
+  image: python:3.12-slim
+  stage: deploy
+  before_script:
+    - pip install --upgrade pip
+    - pip install ansible
+    # SSH for Ansible (private key stored as protected, masked CI variable SSH_PRIVATE_KEY)
+    - 'which ssh-agent || (apt-get update && apt-get install -y openssh-client)'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - >/dev/null
+    - mkdir -p ~/.ssh && chmod 700 ~/.ssh
+    - printf "Host *\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
+    # Optional: Ansible Vault password file from CI var
+    - echo "$ANSIBLE_VAULT_PASSWORD" > vault_pass.txt
+  script:
+    # Pass the built image tag to your play (your role/play can use api_image var)
+    - ansible-playbook -i ansible/inventories/hosts.ini ansible/playbooks/site.yml
+        --tags nginx
+        -e "api_image=$CI_REGISTRY_IMAGE/api:$CI_COMMIT_SHORT_SHA"
+        --vault-password-file vault_pass.txt
+
+deploy:dev:
+  <<: *deploy_template
+  environment:
+    name: dev
+    url: https://$DEV_LB_URL
+  needs: ["build:docker-image"]
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: on_success
+
+smoke:dev:
+  image: curlimages/curl:8.7.1
+  stage: smoke
+  script:
+    - curl -kSf "https://$DEV_LB_URL/healthz"
+  needs: ["deploy:dev"]
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: on_success
+
+promote:staging:
+  stage: promote
+  script: ["echo Promote $CI_COMMIT_SHORT_SHA to staging"]
+  when: manual
+  allow_failure: false
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+  needs: ["smoke:dev"]
+
+deploy:staging:
+  <<: *deploy_template
+  environment:
+    name: staging
+    url: https://$STAGING_LB_URL
+  needs: ["promote:staging"]
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: on_success
+
+smoke:staging:
+  image: curlimages/curl:8.7.1
+  stage: smoke
+  script:
+    - curl -kSf "https://$STAGING_LB_URL/healthz"
+  needs: ["deploy:staging"]
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: on_success
+
+promote:prod:
+  stage: promote
+  script: ["echo Promote $CI_COMMIT_SHORT_SHA to prod"]
+  when: manual
+  allow_failure: false
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+  needs: ["smoke:staging"]
+
+deploy:prod:
+  <<: *deploy_template
+  environment:
+    name: production
+    url: https://$PROD_LB_URL
+  needs: ["promote:prod"]
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: manual
+  # Protect prod deploys (GitLab: protect this job or require approvers in settings)
+
+smoke:prod:
+  image: curlimages/curl:8.7.1
+  stage: smoke
+  script:
+    - curl -kSf "https://$PROD_LB_URL/healthz"
+  needs: ["deploy:prod"]
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: manual
+
+# -------- ROLLBACK (manual) --------
+rollback:prod:
+  image: python:3.12-slim
+  stage: rollback
+  when: manual
+  allow_failure: false
+  before_script:
+    - pip install ansible
+    - 'which ssh-agent || (apt-get update && apt-get install -y openssh-client)'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - >/dev/null
+    - mkdir -p ~/.ssh && chmod 700 ~/.ssh
+    - printf "Host *\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
+    - echo "$ANSIBLE_VAULT_PASSWORD" > vault_pass.txt
+  script:
+    # Rollback by pinning a previous image tag (set ROLLBACK_IMAGE_TAG as a manual job variable)
+    - test -n "$ROLLBACK_IMAGE_TAG"
+    - ansible-playbook -i ansible/inventories/hosts.ini ansible/playbooks/site.yml
+        --tags nginx
+        -e "api_image=$CI_REGISTRY_IMAGE/api:$ROLLBACK_IMAGE_TAG"
+        --vault-password-file vault_pass.txt

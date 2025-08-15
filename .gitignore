@@ -45,3 +45,5 @@ terraform.tfvars
 
 # Allow main Ansible config
 !ansible/ansible.cfg
+
+!.gitlab-ci.yml
