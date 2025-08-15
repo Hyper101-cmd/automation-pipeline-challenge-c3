@@ -28,3 +28,10 @@ terraform.tfvars
 
 # Allow group vars
 !ansible/group_vars/*.yml
+
+# Allow Ansible role YAMLs
+!ansible/roles/**/tasks/*.yml
+!ansible/roles/**/handlers/*.yml
+!ansible/roles/**/defaults/*.yml
+!ansible/roles/**/vars/*.yml
+!ansible/roles/**/meta/*.yml
