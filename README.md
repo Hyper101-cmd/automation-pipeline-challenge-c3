@@ -4,8 +4,21 @@
 [![Python](https://img.shields.io/badge/Python-3.11+-blue)](https://www.python.org/)  
 [![GitLab CI](https://img.shields.io/badge/GitLab-CI/CD-orange)](https://about.gitlab.com/stages-devops-lifecycle/continuous-integration/)
 
-## **Overview**
-This repository contains the solution for the **Automation Pipeline Challenge C3**, demonstrating automation using **Ansible**, CI/CD pipeline setup, and infrastructure configuration management. The project showcases modular and scalable automation practices for deploying and managing servers, applications, and monitoring agents.
+## **Overview**  
+This repository contains the solution for the **Automation Pipeline Challenge C3**, a hands-on DevOps and Infrastructure Engineering task.  
+
+**Scenario:**  
+The target system is a high-traffic **media search and download API** used by thousands of clients daily.  
+It queries **Elasticsearch** for metadata, retrieves media files from storage, and serves them securely over HTTPS.  
+The platform needs to be **scalable**, **secure**, and **observable** while supporting continuous updates.  
+
+**Goals of this solution:**  
+- **Provisioning & Configuration:** Automated setup of load balancer and application servers with NGINX and SSL.  
+- **Monitoring & Observability:** Deployment of Zabbix Agent for real-time performance and health metrics.  
+- **Maintenance Automation:** OS patching and reboot automation for security and stability.  
+- **CI/CD Pipeline:** GitLab-based pipeline for validation, build, Kubernetes deployment, environment promotion, and rollback.  
+
+This solution demonstrates **Infrastructure as Code (IaC)** principles, operational best practices, and modular automation that can be adapted for production-scale environments.  
 
 ## **Extended Description**
 The **Automation Pipeline Challenge C3** demonstrates an end-to-end automation solution for managing infrastructure and applications using **Ansible**. This project simulates a real-world enterprise environment where servers, services, and monitoring agents must be deployed consistently and efficiently across multiple hosts.  
