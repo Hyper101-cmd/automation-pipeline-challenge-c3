@@ -115,6 +115,31 @@ Push to the branch (git push origin feature/your-feature).
 
 Open a pull request.
 
+## **Local Validation (no servers required)**
+
+This repo includes a localhost inventory and a render-only playbook so you can validate roles and templates **without** access to the challenge infrastructure.
+
+**What it does**
+- Renders NGINX (LB + web) and Zabbix Agent configs to `ansible/temp/`
+- Doesn’t touch your system services
+- Proves variables and Jinja2 templates compile cleanly
+
+**Run it**
+```bash
+# From the repo root
+ansible-playbook -i ansible/inventories/localhost.ini ansible/playbooks/render_templates.yml
+ls -l ansible/temp/
+# Expect: site-lb.conf, site-web.conf, zabbix_agentd.conf
+Files Involved
+
+ansible/inventories/localhost.ini — localhost-only inventory
+
+ansible/playbooks/render_templates.yml — renders templates to ansible/temp/
+
+ansible/temp/ — output workspace (ignored by Git except for .gitkeep)
+
+ansible/temp/ is intentionally in .gitignore so generated files don’t get committed.
+
 ## **License**
 
 This project is licensed under the MIT License.
