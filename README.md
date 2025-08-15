@@ -122,24 +122,29 @@ ansible-playbook -i ansible/inventories/hosts.ini ansible/playbooks/certs_create
 ---
 
 ## **Contributing**
-Contributions are welcome. To contribute:
 
-1. Fork the repository.
-2. Create a feature branch:
+We welcome contributions to improve this project.
+
+**Steps**
+1. **Fork the repository** on GitHub.  
+2. **Create a feature branch**  
    ```bash
    git checkout -b feature/your-feature
    ```
-3. Commit changes:
+3. **Commit changes**  
    ```bash
-   git commit -m 'Add feature'
+   git commit -m "Add feature"
    ```
-4. Push to the branch:
+4. **Push to your branch**  
    ```bash
    git push origin feature/your-feature
    ```
-5. Open a pull request.
+5. **Open a pull request** for review.
 
----
+**Guidelines**
+- Follow the repository’s coding style and directory structure.
+- Update documentation for any changes affecting usage.
+- Ensure playbooks pass syntax and lint checks before submission.
 
 ## **Local Validation (No Servers Required)**
 
