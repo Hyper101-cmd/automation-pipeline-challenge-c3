@@ -1,0 +1,50 @@
+# ansible/playbooks/site.yml
+---
+# 1) Load Balancer (NGINX as reverse proxy to web nodes)
+- name: Configure load balancer
+  hosts: lb
+  become: true
+  vars:
+    nginx_is_load_balancer: true
+    # Build upstream list from inventory 'web' group automatically
+    nginx_upstreams: "{{ groups['web'] | default([]) }}"
+    nginx_listen_port: 80
+    nginx_proxy_port: 80
+  roles:
+    - role: nginx
+  tags:
+    - lb
+    - nginx
+
+# 2) Web nodes (NGINX for site + Zabbix Agent)
+- name: Configure web nodes
+  hosts: web
+  become: true
+  vars:
+    nginx_is_load_balancer: false
+    nginx_listen_port: 80
+  roles:
+    - role: nginx
+    - role: zabbix_agent
+  tags:
+    - web
+    - nginx
+    - zabbix
+
+# 3) Zabbix Agent host (if you want the agent running there as well)
+- name: Configure zabbix agent host
+  hosts: zabbix
+  become: true
+  roles:
+    - role: zabbix_agent
+  tags:
+    - zabbix
+
+# 4) Optional: maintenance tasks (safe to run anytime or via --tags maintenance)
+- name: Run maintenance tasks
+  hosts: all
+  become: true
+  roles:
+    - role: maintenance
+  tags:
+    - maintenance

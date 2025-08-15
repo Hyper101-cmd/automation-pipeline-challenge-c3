@@ -1,0 +1,89 @@
+---
+- name: Create or refresh TLS certificates for NGINX
+  hosts: webservers
+  become: true
+  vars:
+    ssl_owner: root
+    ssl_group: root
+    ssl_mode: "0644"
+
+    # Where to store key/cert on the target
+    ssl_key_path: /etc/ssl/private/example.key
+    ssl_cert_path: /etc/ssl/certs/example.crt
+
+    # CSR / certificate details
+    ssl_common_name: "example.local"
+    ssl_subject_alt_names:
+      - "DNS:example.local"
+      - "DNS:localhost"
+
+    # Certificate validity (days)
+    ssl_valid_days: 825
+
+  pre_tasks:
+    - name: Ensure community.crypto collection is available (controller side)
+      delegate_to: localhost
+      run_once: true
+      ansible.builtin.command:
+        cmd: ansible-galaxy collection list community.crypto
+      register: crypto_collections
+      changed_when: false
+      failed_when: false
+
+    - name: Hint to install community.crypto if missing (no-fail)
+      delegate_to: localhost
+      run_once: true
+      ansible.builtin.debug:
+        msg: >-
+          If this play fails on crypto modules, run:
+          'ansible-galaxy collection install community.crypto'
+      when: crypto_collections.rc != 0
+
+  tasks:
+    - name: Ensure directories exist
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ ssl_owner }}"
+        group: "{{ ssl_group }}"
+        mode: "0755"
+      loop:
+        - "{{ ssl_key_path | dirname }}"
+        - "{{ ssl_cert_path | dirname }}"
+
+    - name: Generate a new private key (if missing)
+      community.crypto.openssl_privatekey:
+        path: "{{ ssl_key_path }}"
+        type: RSA
+        size: 2048
+        owner: "{{ ssl_owner }}"
+        group: "{{ ssl_group }}"
+        mode: "0600"
+
+    - name: Create a certificate signing request (CSR)
+      community.crypto.openssl_csr:
+        path: "{{ ssl_key_path }}.csr"
+        privatekey_path: "{{ ssl_key_path }}"
+        common_name: "{{ ssl_common_name }}"
+        subject_alt_name: "{{ ssl_subject_alt_names }}"
+        owner: "{{ ssl_owner }}"
+        group: "{{ ssl_group }}"
+        mode: "{{ ssl_mode }}"
+
+    - name: Create a self-signed certificate
+      community.crypto.x509_certificate:
+        path: "{{ ssl_cert_path }}"
+        privatekey_path: "{{ ssl_key_path }}"
+        csr_path: "{{ ssl_key_path }}.csr"
+        provider: selfsigned
+        selfsigned_not_after: "+{{ ssl_valid_days }}d"
+        owner: "{{ ssl_owner }}"
+        group: "{{ ssl_group }}"
+        mode: "{{ ssl_mode }}"
+      notify: Reload nginx
+
+  handlers:
+    - name: Reload nginx
+      ansible.builtin.service:
+        name: nginx
+        state: reloaded

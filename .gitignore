@@ -22,3 +22,6 @@ terraform.tfvars
 
 # Logs
 *.log
+
+# Allow main playbooks
+!ansible/playbooks/*.yml
