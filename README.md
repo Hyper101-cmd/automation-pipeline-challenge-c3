@@ -22,6 +22,8 @@ The challenge tasks included:
 4. Automating maintenance tasks such as OS patching and reboot.
 5. Outlining a **GitLab CI/CD pipeline** for automated testing, build, deployment, and rollback of API updates.
 
+A **live mock API demo** for this project is also available — see the [Executable Demo](#executable-demo) section at the bottom of this README.
+
 ---
 
 ## **Extended Description**
