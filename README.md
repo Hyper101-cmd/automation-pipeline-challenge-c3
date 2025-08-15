@@ -2,7 +2,8 @@
 
 [![Ansible](https://img.shields.io/badge/Ansible-2.14+-blue)](https://www.ansible.com/)  
 [![Python](https://img.shields.io/badge/Python-3.11+-blue)](https://www.python.org/)  
-[![GitLab CI](https://img.shields.io/badge/GitLab-CI/CD-orange)](https://about.gitlab.com/stages-devops-lifecycle/continuous-integration/)
+[![GitLab CI](https://img.shields.io/badge/GitLab-CI/CD-orange)](https://about.gitlab.com/stages-devops-lifecycle/continuous-integration/)  
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-CodeSandbox-green)](https://codesandbox.io/p/github/joycemwangi/automation-pipeline-challenge-c3/main)
 
 ## **Overview**
 This repository contains the solution for the **Automation Pipeline Challenge C3**, which involves designing and partially implementing an infrastructure solution for a scalable, secure, and observable client-facing media search and download API service.  
@@ -22,8 +23,6 @@ The challenge tasks included:
 4. Automating maintenance tasks such as OS patching and reboot.
 5. Outlining a **GitLab CI/CD pipeline** for automated testing, build, deployment, and rollback of API updates.
 
-A **live mock API demo** for this project is also available — see the [Executable Demo](#executable-demo) section at the bottom of this README.
-
 ---
 
 ## **Extended Description**
@@ -38,10 +37,14 @@ Key highlights:
 - **CI/CD Integration**: GitLab pipeline for validation, Kubernetes-based deployment, smoke testing, promotion, and rollback.
 - **Environment Flexibility**: Inventory and variable structure to easily adapt the same automation to dev, staging, and prod.
 
+---
+
 ## Automation Pipeline Diagram
 <a href="docs/automation-pipeline.png">
   <img src="docs/automation-pipeline.png" alt="Automation Pipeline" width="450">
 </a>
+
+---
 
 ## **Features**
 - **Infrastructure as Code**: Ansible playbooks and roles to provision and configure a load balancer, application servers, and monitoring agents.
@@ -51,6 +54,8 @@ Key highlights:
 - **Automated Maintenance**: Playbooks to apply the latest OS patches and reboot servers automatically.
 - **CI/CD Integration**: GitLab pipeline with validation, Kubernetes deployment, smoke testing, promotion between environments, and rollback.
 - **Multi-Environment Support**: Flexible inventory and variable structure for dev, staging, and production without code changes.
+
+---
 
 ## Repository Structure
 ```text
