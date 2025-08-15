@@ -81,11 +81,12 @@ automation-pipeline-challenge-c3/
 ```
 ## **How the Roles Work**
 
-| Role             | Purpose                               |                       Key Tasks                                           |
+| Role             | Purpose                               | Key Tasks                                                                 |
 |------------------|---------------------------------------|---------------------------------------------------------------------------|
-| **nginx**        | Configure and deploy NGINX web server | Install NGINX, deploy `nginx.conf` & `site.conf` templates, start service |
-| **zabbix_agent** | Deploy monitoring agent               | Install Zabbix agent, configure `zabbix_agentd.conf`, start service |
-| **maintenance**  | Perform maintenance tasks             | Clean up logs, rotate files, run custom scripts |
+| **nginx**        | Configure and deploy NGINX web server with HTTPS support | Install NGINX, deploy `nginx.conf` & `site.conf` templates, configure SSL certificates, start and enable service |
+| **zabbix_agent** | Deploy monitoring agent for observability | Install Zabbix agent, configure `zabbix_agentd.conf`, enable active checks, start and enable service |
+| **maintenance**  | Automate system maintenance tasks     | Apply latest OS patches, reboot if required, clean up logs, rotate files |
+
 
 ## **Prerequisites**
 - **Ansible** >= 2.14  
