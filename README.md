@@ -143,29 +143,33 @@ Contributions are welcome. To contribute:
 
 ## **Local Validation (No Servers Required)**
 
-This repo includes a localhost inventory and a render-only playbook so you can validate roles and templates without access to the challenge infrastructure.
+This repository includes a localhost inventory and a render-only playbook so you can validate roles and templates without access to the challenge infrastructure.
 
-**What it does:**
-- Renders NGINX (LB + web) and Zabbix Agent configs to `ansible/temp/`  
-- Doesn’t touch your system services  
-- Proves variables and Jinja2 templates compile cleanly  
+**Goals**
+- Validate Jinja2 templates and Ansible variables without touching real servers
+- Ensure NGINX and Zabbix configurations compile cleanly
+- Keep generated files out of version control
 
-**Run it:**
+**Steps**
 ```bash
 # From the repo root
 ansible-playbook -i ansible/inventories/localhost.ini ansible/playbooks/render_templates.yml
 ls -l ansible/temp/
-# Expect: site-lb.conf, site-web.conf, zabbix_agentd.conf
 ```
 
-**Files Involved:**
+**Expected Output**
+```text
+site-lb.conf
+site-web.conf
+zabbix_agentd.conf
+```
+
+**Files Involved**
 - `ansible/inventories/localhost.ini` — localhost-only inventory  
 - `ansible/playbooks/render_templates.yml` — renders templates to `ansible/temp/`  
 - `ansible/temp/` — output workspace (ignored by Git except for `.gitkeep`)  
 
 `ansible/temp/` is intentionally in `.gitignore` so generated files don’t get committed.
-
----
 
 ## **License**
 This project is licensed under the MIT License.
