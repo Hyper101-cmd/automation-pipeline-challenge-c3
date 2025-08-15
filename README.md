@@ -223,12 +223,14 @@ This pipeline covers automated validation, Kubernetes deployments with gated pro
 
 ## **Executable Demo**
 
-You can try a live mock version of the API here:  
-[![Run in CodeSandbox](https://img.shields.io/badge/CodeSandbox-Open%20Demo-blue?logo=codesandbox)](https://kncqz4-8080.csb.app)
+You can explore a running instance of the demo API here:  
+[![Open in CodeSandbox](https://img.shields.io/badge/Open%20in-CodeSandbox-blue?logo=codesandbox)](https://kncqz4.csb.app)
 
-**Example endpoints:**
-- Health check: [https://kncqz4-8080.csb.app/healthz](https://kncqz4-8080.csb.app/healthz)
-- Search: [https://kncqz4-8080.csb.app/search?q=sunset](https://kncqz4-8080.csb.app/search?q=sunset)
+### **Local Run (WSL)**
+
+1. **Open a terminal** and go to the `demo-api` folder:
+   ```bash
+   cd ~/automation-pipeline-challenge-c3/demo-api
 
 ## **License**
 This project is licensed under the MIT License.
