@@ -245,13 +245,13 @@ You can explore a running instance of the demo API here:
 
 5. **Test the endpoints from a second terminal:**
 
-          Health check
+    Health check
 
           curl -fsSL http://localhost:8080/healthz
 
           -> OK
 
-        Example search
+    Example search
    
          curl -fsSL "http://localhost:8080/search?q=sunset"
    
