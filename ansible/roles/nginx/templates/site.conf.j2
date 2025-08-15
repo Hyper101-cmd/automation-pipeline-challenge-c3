@@ -1,0 +1,93 @@
+# roles/nginx/templates/site.conf.j2
+{% set listen_http = nginx_listen_port | default(80) %}
+{% set listen_https = nginx_listen_port_tls | default(443) %}
+{% set app_port = nginx_app_port | default(8080) %}
+{% set proxy_port = nginx_proxy_port | default(80) %}
+
+# --- HTTP : redirect to HTTPS
+server {
+    listen {{ listen_http }};
+    server_name {{ server_name | default('_') }};
+    return 301 https://$host$request_uri;
+}
+
+{% if nginx_is_load_balancer | default(false) %}
+# =========================
+# Load Balancer vhost
+# =========================
+upstream backend_upstream {
+{% for host in nginx_upstreams | default([]) %}
+    server {{ host }}:{{ proxy_port }};
+{% endfor %}
+    keepalive 32;
+}
+
+server {
+    listen {{ listen_https }} ssl http2;
+    server_name {{ server_name | default('_') }};
+
+    ssl_certificate {{ ssl_cert_path }};
+    ssl_certificate_key {{ ssl_key_path }};
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_prefer_server_ciphers on;
+
+    access_log /var/log/nginx/lb_access.log;
+    error_log  /var/log/nginx/lb_error.log;
+
+    # Optional: basic hardening / gzip
+    gzip on;
+    gzip_types text/plain text/css application/json application/javascript application/xml+rss;
+
+    location / {
+        proxy_pass http://backend_upstream;
+        proxy_http_version 1.1;
+        proxy_set_header Connection "";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /healthz {
+        return 200 "OK\n";
+        add_header Content-Type text/plain;
+    }
+}
+{% else %}
+# =========================
+# Web node vhost
+# =========================
+server {
+    listen {{ listen_https }} ssl http2;
+    server_name {{ server_name | default('_') }};
+
+    ssl_certificate {{ ssl_cert_path }};
+    ssl_certificate_key {{ ssl_key_path }};
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_prefer_server_ciphers on;
+
+    access_log /var/log/nginx/web_access.log;
+    error_log  /var/log/nginx/web_error.log;
+
+    root /var/www/html;
+    index index.html;
+
+    location / {
+        # If you have a local app on a port, proxy to it:
+        {% if nginx_proxy_local | default(false) %}
+        proxy_pass http://127.0.0.1:{{ app_port }};
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        {% else %}
+        try_files $uri $uri/ =404;
+        {% endif %}
+    }
+
+    location /healthz {
+        return 200 "OK\n";
+        add_header Content-Type text/plain;
+    }
+}
+{% endif %}

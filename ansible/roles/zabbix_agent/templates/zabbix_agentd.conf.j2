@@ -1,0 +1,8 @@
+# Managed by Ansible
+Server={{ zabbix_server }}
+ServerActive={{ zabbix_agent_server_active }}
+HostnameItem={{ zabbix_agent_hostname_item }}
+Include=/etc/zabbix/zabbix_agentd.d/*.conf
+LogFile=/var/log/zabbix/zabbix_agentd.log
+PidFile=/var/run/zabbix/zabbix_agentd.pid
+StartAgents=3
