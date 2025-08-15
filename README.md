@@ -5,76 +5,36 @@
 [![GitLab CI](https://img.shields.io/badge/GitLab-CI/CD-orange)](https://about.gitlab.com/stages-devops-lifecycle/continuous-integration/)
 
 ## **Overview**
-This repository contains the solution for the **Automation Pipeline Challenge C3**, a DevOps and Infrastructure Engineering task simulating a high-traffic **media search and download API**.
+This repository contains the solution for the **Automation Pipeline Challenge C3**, which involves designing and partially implementing an infrastructure solution for a scalable, secure, and observable client-facing media search and download API service.  
+The API queries Elasticsearch for metadata, retrieves media files from storage, and serves them over HTTPS.  
+The core services run on Linux, and the solution reflects a transition toward a modern, containerized environment with automation, reliability, and operational excellence as priorities.
 
-The service:
-- Queries **Elasticsearch** for media metadata
-- Retrieves media files from storage
-- Serves them over **HTTPS** via an **NGINX load balancer**
+The deployment target includes:
+- **Load balancer:** 192.168.10.2
+- **Server A:** 192.168.10.3
+- **Server B:** 192.168.10.4
+- **Zabbix Agent Server:** 192.168.10.5
 
-The project demonstrates:
-- **Infrastructure as Code**: Ansible playbooks and roles to provision a load balancer and two application servers
-- **Security**: SSL/TLS configuration and OS patch automation
-- **Observability**: Zabbix agent deployment for real-time monitoring
-- **Scalability**: Modular design adaptable to multi-environment deployments
-- **CI/CD**: GitLab pipeline for automated validation, Kubernetes deployment, environment promotion, and rollback
+The challenge tasks included:
+1. Provisioning and configuring infrastructure using **Ansible**.
+2. Setting up **Nginx** with HTTPS and SSL certificates.
+3. Installing and configuring the **Zabbix monitoring agent** for observability.
+4. Automating maintenance tasks such as OS patching and reboot.
+5. Outlining a **GitLab CI/CD pipeline** for automated testing, build, deployment, and rollback of API updates.
+
+---
 
 ## **Extended Description**
-The **Automation Pipeline Challenge C3** demonstrates an end-to-end automation solution for managing infrastructure and applications using **Ansible**. This project simulates a real-world enterprise environment where servers, services, and monitoring agents must be deployed consistently and efficiently across multiple hosts.  
+This project demonstrates an end-to-end automation workflow for deploying and managing Linux-based infrastructure and application services.  
+The automation is designed to be modular, reusable, and environment-agnostic, supporting multiple deployment targets with minimal code changes.
 
-Key highlights of this project:  
-- **Infrastructure as Code (IaC):** Using Ansible roles and playbooks to standardize deployment and configuration.  
-- **Modular Architecture:** Roles for NGINX, Zabbix agent, and maintenance tasks allow reusability and easier maintenance.  
-
-## **CI/CD Pipeline (GitLab)**
-Automates testing, build, deployment, and rollback for the API on Kubernetes.
-
-**Goals**
-
-Enforce quality (YAML & Ansible lint, syntax check)
-
-Build API container and push to GitLab Container Registry
-
-Deploy to Kubernetes (Dev → Staging → Prod) using Helm or kubectl
-
-Run smoke tests after each deploy
-
-Enable one-click rollback via Helm
-
-**Stages**
-
-**validate** – Run yamllint, ansible-lint, Ansible syntax check, and render templates locally
-
-**build** – Build and push API image (tags: latest + commit SHA)
-
-**deploy** – Helm upgrade/install to target namespace with new image tag
-
-**smoke** – Test /healthz endpoint in Kubernetes service
-
-**promote** – Manual approvals for staging → prod promotion
-
-**rollback** – Manual helm rollback to previous release
-
-**Secrets & Config**
-
-Store secrets as masked GitLab CI/CD variables:
-KUBE_CONFIG, HELM_REPO_AUTH, ANSIBLE_VAULT_PASSWORD
-
-Use Kubernetes Secrets or GitLab Vault for sensitive values
-
-Environment configs:
-
-Separate Helm values files (values-dev.yaml, values-staging.yaml, values-prod.yaml)
-
-Or use GitLab environment variables
-
-**Rollback Strategy**
-
-**Helm:** helm rollback to a previous release
-
-**Image pinning:** redeploy last-known-good image tag
-
-This pipeline covers automated validation, Kubernetes deployments with gated promotions, and rapid rollback, aligned to a modern containerized infrastructure.
+Key highlights:
+- **Infrastructure as Code**: Ansible playbooks and roles to provision a load balancer and two application servers.
+- **Configuration Management**: Role-based management of Nginx, Zabbix Agent, and maintenance operations.
+- **Security & Observability**: HTTPS configuration, SSL certificate handling, and integration with Zabbix monitoring.
+- **Maintenance Automation**: Automated OS patching and reboot workflows for keeping servers secure and up to date.
+- **CI/CD Integration**: GitLab pipeline for validation, Kubernetes-based deployment, smoke testing, promotion, and rollback.
+- **Environment Flexibility**: Inventory and variable structure to easily adapt the same automation to dev, staging, and prod.
 
 ## Automation Pipeline Diagram
 <a href="docs/automation-pipeline.png">
