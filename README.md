@@ -111,7 +111,6 @@ automation-pipeline-challenge-c3/
 - SSH access to target hosts  
 
 ---
-
 ## **Setup & Usage**
 
 **Clone the repository:**
@@ -120,12 +119,12 @@ git clone https://github.com/joycemwangi/automation-pipeline-challenge-c3.git
 cd automation-pipeline-challenge-c3
 ```
 
-**Run the main playbook (site.yml) to provision and configure servers:**
+**Run the main playbook:**
 ```bash
 ansible-playbook -i ansible/inventories/hosts.ini ansible/playbooks/site.yml
 ```
 
-**Run maintenance tasks (optional):**
+**Run maintenance tasks:**
 ```bash
 ansible-playbook -i ansible/inventories/hosts.ini ansible/playbooks/maintenance.yml
 ```
@@ -241,28 +240,32 @@ You can explore a running instance of the demo API here:
    
          npm install
 
-4. **Start the API (runs on port 8080):**
-   
+3. **Start the API (runs on port 8080):**
+
          npm start
 
      You should see:
-     Demo Media API listening on :8080
+   
+         Demo Media API listening on :8080
 
-5. **Test the endpoints from a second terminal:**
+4. **Test the endpoints from a second terminal:**
 
     Health check
 
           curl -fsSL http://localhost:8080/healthz
-
-    -> ok
+    Output:
+   
+          ok
 
     Example search
    
          curl -fsSL "http://localhost:8080/search?q=sunset"
+
+    Output:
    
-    -> {"query":"sunset","count":1,"results":[{"id":"img_001","title":"Sunset over dunes","type":"image"}]}
+         {"query":"sunset","count":1,"results":[{"id":"img_001","title":"Sunset over dunes","type":"image"}]}
 
-  Note: This mock API is provided for demonstration only and does not connect to real Elasticsearch or storage backends.
-
+  Note: This mock API is provided for demonstration purposes only and does not connect to real Elasticsearch or storage backends.
+  
 ## **License**
 This project is licensed under the MIT License.
