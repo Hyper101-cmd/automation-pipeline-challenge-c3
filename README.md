@@ -230,7 +230,7 @@ This pipeline covers automated validation, Kubernetes deployments with gated pro
 ## **Executable Demo**
 
 <p align="center">
-  <a href="https://kncqz4.csb.app" target="_blank">
+  <a href="https://kncqz4.csb.app/healthz" target="_blank">
     <img src="https://img.shields.io/badge/Open%20in-CodeSandbox-blue?logo=codesandbox" alt="Open in CodeSandbox">
   </a>
 </p>
