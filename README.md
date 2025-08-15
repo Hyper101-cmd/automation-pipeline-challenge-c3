@@ -92,82 +92,80 @@ automation-pipeline-challenge-c3/
 - **Ansible** >= 2.14  
 - **Python** >= 3.11  
 - Git installed locally  
-- SSH access to target hosts
+- SSH access to target hosts  
+
+---
 
 ## **Setup & Usage**
 
-Clone the repository:
-
+**Clone the repository:**
+```bash
 git clone https://github.com/joycemwangi/automation-pipeline-challenge-c3.git
 cd automation-pipeline-challenge-c3
+```
 
-
-Run the main playbook (site.yml) to provision and configure servers:
-
+**Run the main playbook (site.yml) to provision and configure servers:**
+```bash
 ansible-playbook -i ansible/inventories/hosts.ini ansible/playbooks/site.yml
+```
 
-
-Run maintenance tasks (optional):
-
+**Run maintenance tasks (optional):**
+```bash
 ansible-playbook -i ansible/inventories/hosts.ini ansible/playbooks/maintenance.yml
+```
 
-Generate or manage certificates:
-
+**Generate or manage certificates:**
+```bash
 ansible-playbook -i ansible/inventories/hosts.ini ansible/playbooks/certs_create.yml
+```
+
+---
 
 ## **Contributing**
-
 Contributions are welcome. To contribute:
 
 1. Fork the repository.
-
 2. Create a feature branch:
-
-git checkout -b feature/your-feature
-
+   ```bash
+   git checkout -b feature/your-feature
+   ```
 3. Commit changes:
-
-git commit -m 'Add feature'
-
+   ```bash
+   git commit -m 'Add feature'
+   ```
 4. Push to the branch:
-
-git push origin feature/your-feature
-
+   ```bash
+   git push origin feature/your-feature
+   ```
 5. Open a pull request.
+
+---
 
 ## **Local Validation (No Servers Required)**
 
 This repo includes a localhost inventory and a render-only playbook so you can validate roles and templates without access to the challenge infrastructure.
 
-## **What it does:**
+**What it does:**
+- Renders NGINX (LB + web) and Zabbix Agent configs to `ansible/temp/`  
+- Doesn’t touch your system services  
+- Proves variables and Jinja2 templates compile cleanly  
 
-Renders NGINX (LB + web) and Zabbix Agent configs to ansible/temp/
-
-Doesn’t touch your system services
-
-Proves variables and Jinja2 templates compile cleanly
-
-## **Run it:**
-
-#From the repo root
+**Run it:**
+```bash
+# From the repo root
 ansible-playbook -i ansible/inventories/localhost.ini ansible/playbooks/render_templates.yml
 ls -l ansible/temp/
-#Expect: site-lb.conf, site-web.conf, zabbix_agentd.conf
+# Expect: site-lb.conf, site-web.conf, zabbix_agentd.conf
+```
 
+**Files Involved:**
+- `ansible/inventories/localhost.ini` — localhost-only inventory  
+- `ansible/playbooks/render_templates.yml` — renders templates to `ansible/temp/`  
+- `ansible/temp/` — output workspace (ignored by Git except for `.gitkeep`)  
 
-## **Files Involved:**
-ansible/inventories/localhost.ini — localhost-only inventory
-
-ansible/playbooks/render_templates.yml — renders templates to ansible/temp/
-
-ansible/temp/ — output workspace (ignored by Git except for .gitkeep)
-
-ansible/temp/ is intentionally in .gitignore so generated files don’t get committed.
-
-## **License**
-
-This project is licensed under the MIT License.
-
+`ansible/temp/` is intentionally in `.gitignore` so generated files don’t get committed.
 
 ---
 
+## **License**
+This project is licensed under the MIT License.
