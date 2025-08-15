@@ -13,61 +13,53 @@ The **Automation Pipeline Challenge C3** demonstrates an end-to-end automation s
 Key highlights of this project:  
 - **Infrastructure as Code (IaC):** Using Ansible roles and playbooks to standardize deployment and configuration.  
 - **Modular Architecture:** Roles for NGINX, Zabbix agent, and maintenance tasks allow reusability and easier maintenance.  
-- **CI/CD Integration:** Automated testing and deployment through GitLab CI/CD ensures reliable and repeatable processes.
-- ### CI/CD Pipeline (GitLab)
+- **CI/CD Integration:**
+- CI/CD Pipeline (GitLab)
+Automates testing, build, deployment, and rollback for the API on Kubernetes.
 
-**Goals**
-- Enforce quality with static checks (YAML, Ansible lint, syntax)
-- Build the API container and push to GitLab Container Registry
-- Deploy with gates (dev → staging → prod), with smoke tests after each deploy
-- Provide a one-click rollback
+Goals:
 
-**Stages & jobs**
-1. **validate**  
-   - `yamllint`, `ansible-lint`  
-   - `ansible-playbook --syntax-check`  
-   - Render templates to `ansible/temp/` (no servers)
+Enforce quality (YAML & Ansible lint, syntax check)
 
-2. **build**  
-   - Build `api` Docker image and push to `$CI_REGISTRY_IMAGE` (tags: `latest` + `$CI_COMMIT_SHORT_SHA`)
+Build API container and push to GitLab Container Registry
 
-3. **deploy**  
-   - Use **Ansible** to update LB/web (or **Helm** if using Kubernetes)
-   - Pass the built image tag via `api_image=$CI_REGISTRY_IMAGE/api:$CI_COMMIT_SHORT_SHA`
+Deploy to Kubernetes (Dev → Staging → Prod) using Helm or kubectl
 
-4. **smoke**  
-   - `curl -kSf https://$ENV_LB_URL/healthz` to validate
+Run smoke tests after each deploy
 
-5. **promote**  
-   - Manual approvals to advance between environments
+Enable one-click rollback via Helm
 
-6. **rollback**  
-   - Manual job; pin `ROLLBACK_IMAGE_TAG` to revert
+Stages:
 
-**Secrets & environment config**
-- **Secrets**: store as **masked, protected** GitLab CI/CD variables:
-  - `SSH_PRIVATE_KEY` (for Ansible SSH)
-  - `ANSIBLE_VAULT_PASSWORD` (if using Ansible Vault)
-  - `$DEV_LB_URL`, `$STAGING_LB_URL`, `$PROD_LB_URL`
-  - (If pushing to an external registry: `REGISTRY_USER`, `REGISTRY_PASSWORD`)
-- **Environment-scoped variables**: define different values per environment (GitLab → Settings → CI/CD → Variables).
-- **Vault options**:
-  - GitLab’s **HashiCorp Vault** integration (preferred for sensitive creds)
-  - Or **Ansible Vault** for `group_vars/*` with `--vault-password-file`.
-- **Configs per env**:
-  - Option A: separate inventories (`inventories/dev.ini`, etc.)
-  - Option B: shared inventory with `group_vars/dev.yml`, `group_vars/staging.yml`, `group_vars/prod.yml` and `--limit`/`-e env=…`.
+validate – yamllint, ansible-lint, Ansible syntax check, render templates locally
 
-**Rollback strategy**
-- **Containerized**: redeploy a previous image tag (`ROLLBACK_IMAGE_TAG`) or `helm rollback` to a prior revision.
-- **Ansible-only**: maintain a `previous` symlink or var with last-known-good artifact and redeploy it on rollback.
+build – Build/push API image (latest + commit SHA)
 
-> This pipeline is intentionally light: it demonstrates testing, build, deploy, smoke, promotion, and rollback without requiring access to your private infrastructure. It can be mirrored into GitLab to run as-is.
+deploy – Helm upgrade/install to target namespace with new image tag
 
-- **Scalability:** Inventory and variable management allow the playbooks to be applied to multiple environments or hosts without changes to core logic.  
-- **Documentation:** Outputs and results are captured in `docs/submission.pdf` for easy review and validation.  
+smoke – Test /healthz endpoint in Kubernetes service
 
-This project highlights practical skills in **automation, configuration management, CI/CD, and infrastructure reliability**, making it a strong demonstration of DevOps and infrastructure engineering expertise.
+promote – Manual approvals for staging/prod
+
+rollback – Manual helm rollback to previous release
+
+Secrets & Config:
+
+Store secrets as masked GitLab CI/CD variables (KUBE_CONFIG, HELM_REPO_AUTH, ANSIBLE_VAULT_PASSWORD)
+
+Use Kubernetes Secrets or GitLab Vault for sensitive values
+
+Environment configs: separate Helm values files (values-dev.yaml, values-staging.yaml, values-prod.yaml) or use GitLab environment variables
+
+Rollback Strategy:
+
+Helm: helm rollback <release> <revision>
+
+Image pinning: redeploy last-known-good image tag
+
+This pipeline covers automated validation, Kubernetes deployments with gated promotions, and rapid rollback, aligned to Imago’s containerized infrastructure.
+
+If you want, I can now generate a matching .gitlab-ci.yml file using Helm so your repo is fully consistent with this description. That way, your PDF submission will show both the reasoning and the actual working config. Would you like me to prepare that?
 
 ## Automation Pipeline Diagram
 <a href="docs/automation-pipeline.png">
