@@ -41,8 +41,8 @@ Key highlights:
 
 ## Automation Pipeline Diagram
 <p align="center">
-  <a href="docs/automation-pipeline.png" target="_blank">
-    <img src="docs/automation-pipeline.png" alt="Automation Pipeline" width="450">
+  <a href="https://kncqz4-8080.csb.app/healthz" target="_blank">
+    <img src="https://img.shields.io/badge/Open%20in-CodeSandbox-blue?logo=codesandbox" alt="Open in CodeSandbox">
   </a>
 </p>
 
