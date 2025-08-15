@@ -24,6 +24,8 @@
   </a>
 </p>
 
+---
+
 ## **Overview**
 This repository contains the solution for the **Automation Pipeline Challenge C3**, which involves designing and partially implementing an infrastructure solution for a scalable, secure, and observable client-facing media search and download API service.  
 The API queries Elasticsearch for metadata, retrieves media files from storage, and serves them over HTTPS.  
