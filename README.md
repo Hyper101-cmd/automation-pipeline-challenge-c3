@@ -231,6 +231,26 @@ You can explore a running instance of the demo API here:
 1. **Open a terminal** and go to the `demo-api` folder:
    ```bash
    cd ~/automation-pipeline-challenge-c3/demo-api
+   
+2. **Install dependencies:**
+npm install
+
+3. **Start the API (runs on port 8080):**
+npm start
+
+You should see:
+Demo Media API listening on :8080
+
+4. **Test the endpoints from a second terminal:**
+# Health check
+curl -fsSL http://localhost:8080/healthz
+# -> OK
+
+# Example search
+curl -fsSL "http://localhost:8080/search?q=sunset"
+# -> {"query":"sunset","count":1,"results":[{"id":"img_001","title":"Sunset over dunes","type":"image"}]}
+
+Note: This mock API is provided for demonstration only and does not connect to real Elasticsearch or storage backends.
 
 ## **License**
 This project is licensed under the MIT License.
