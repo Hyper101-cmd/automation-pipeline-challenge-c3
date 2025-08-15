@@ -13,30 +13,53 @@ The **Automation Pipeline Challenge C3** demonstrates an end-to-end automation s
 Key highlights of this project:  
 - **Infrastructure as Code (IaC):** Using Ansible roles and playbooks to standardize deployment and configuration.  
 - **Modular Architecture:** Roles for NGINX, Zabbix agent, and maintenance tasks allow reusability and easier maintenance.  
+CI/CD Pipeline (GitLab)
 
-- **CI/CD Pipeline (GitLab**)
 Automates testing, build, deployment, and rollback for the API on Kubernetes.
-Goals:
+
+Goals
+
 Enforce quality (YAML & Ansible lint, syntax check)
+
 Build API container and push to GitLab Container Registry
+
 Deploy to Kubernetes (Dev → Staging → Prod) using Helm or kubectl
+
 Run smoke tests after each deploy
+
 Enable one-click rollback via Helm
-Stages:
-validate – yamllint, ansible-lint, Ansible syntax check, render templates locally
-build – Build/push API image (latest + commit SHA)
+
+Stages
+
+validate – Run yamllint, ansible-lint, Ansible syntax check, and render templates locally
+build – Build and push API image (tags: latest + commit SHA)
 deploy – Helm upgrade/install to target namespace with new image tag
 smoke – Test /healthz endpoint in Kubernetes service
-promote – Manual approvals for staging/prod
+promote – Manual approvals for staging → prod promotion
 rollback – Manual helm rollback to previous release
-Secrets & Config:
-Store secrets as masked GitLab CI/CD variables (KUBE_CONFIG, HELM_REPO_AUTH, ANSIBLE_VAULT_PASSWORD)
+
+Secrets & Config
+
+Store secrets as masked GitLab CI/CD variables:
+KUBE_CONFIG, HELM_REPO_AUTH, ANSIBLE_VAULT_PASSWORD
+
 Use Kubernetes Secrets or GitLab Vault for sensitive values
-Environment configs: separate Helm values files (values-dev.yaml, values-staging.yaml, values-prod.yaml) or use GitLab environment variables
-Rollback Strategy:
-Helm: helm rollback <release> <revision>
+
+Environment configs:
+
+Separate Helm values files (values-dev.yaml, values-staging.yaml, values-prod.yaml)
+
+Or use GitLab environment variables
+
+Rollback Strategy
+
+Helm: helm rollback to a previous release
+
 Image pinning: redeploy last-known-good image tag
+
 This pipeline covers automated validation, Kubernetes deployments with gated promotions, and rapid rollback, aligned to a modern containerized infrastructure.
+
+Do you also want me to make a diagram of this pipeline so it looks more visual in your README? That could make it stand out.
 
 ## Automation Pipeline Diagram
 <a href="docs/automation-pipeline.png">
