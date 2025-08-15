@@ -257,7 +257,7 @@ You can explore a running instance of the demo API here:
    
     -> {"query":"sunset","count":1,"results":[{"id":"img_001","title":"Sunset over dunes","type":"image"}]}
 
-   Note: This mock API is provided for demonstration only and does not connect to real Elasticsearch or storage backends.
+  Note: This mock API is provided for demonstration only and does not connect to real Elasticsearch or storage backends.
 
 ## **License**
 This project is licensed under the MIT License.
