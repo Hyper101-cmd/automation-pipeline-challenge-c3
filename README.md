@@ -249,7 +249,7 @@ You can explore a running instance of the demo API here:
 
           curl -fsSL http://localhost:8080/healthz
 
-    -> OK
+    -> ok
 
     Example search
    
