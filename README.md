@@ -14,10 +14,10 @@ Key highlights of this project:
 - **Infrastructure as Code (IaC):** Using Ansible roles and playbooks to standardize deployment and configuration.  
 - **Modular Architecture:** Roles for NGINX, Zabbix agent, and maintenance tasks allow reusability and easier maintenance.  
 
-CI/CD Pipeline (GitLab)
+## **CI/CD Pipeline (GitLab)**
 Automates testing, build, deployment, and rollback for the API on Kubernetes.
 
-Goals
+**Goals**
 
 Enforce quality (YAML & Ansible lint, syntax check)
 
@@ -29,7 +29,7 @@ Run smoke tests after each deploy
 
 Enable one-click rollback via Helm
 
-Stages
+**Stages**
 
 validate – Run yamllint, ansible-lint, Ansible syntax check, and render templates locally
 
@@ -43,7 +43,7 @@ promote – Manual approvals for staging → prod promotion
 
 rollback – Manual helm rollback to previous release
 
-Secrets & Config
+**Secrets & Config**
 
 Store secrets as masked GitLab CI/CD variables:
 KUBE_CONFIG, HELM_REPO_AUTH, ANSIBLE_VAULT_PASSWORD
@@ -56,7 +56,7 @@ Separate Helm values files (values-dev.yaml, values-staging.yaml, values-prod.ya
 
 Or use GitLab environment variables
 
-Rollback Strategy
+**Rollback Strategy**
 
 Helm: helm rollback to a previous release
 
