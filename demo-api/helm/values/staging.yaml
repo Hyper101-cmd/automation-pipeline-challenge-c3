@@ -1,0 +1,4 @@
+replicaCount: 1
+env:
+  - name: NODE_ENV
+    value: "staging"
