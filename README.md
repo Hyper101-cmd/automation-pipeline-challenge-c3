@@ -3,7 +3,15 @@
 [![Ansible](https://img.shields.io/badge/Ansible-2.14+-blue)](https://www.ansible.com/)  
 [![Python](https://img.shields.io/badge/Python-3.11+-blue)](https://www.python.org/)  
 [![GitLab CI](https://img.shields.io/badge/GitLab-CI/CD-orange)](https://about.gitlab.com/stages-devops-lifecycle/continuous-integration/)  
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-CodeSandbox-green)](https://kncqz4-8080.csb.app/healthz)
+<p align="center">
+  <a href="https://codesandbox.io/p/github/joycemwangi/automation-pipeline-challenge-c3/main" target="_blank">
+    <img src="https://img.shields.io/badge/Open%20in-CodeSandbox-blue?logo=codesandbox" alt="Open in CodeSandbox">
+  </a>
+  &nbsp;
+  <a href="https://kncqz4-8080.csb.app/healthz" target="_blank">
+    <img src="https://img.shields.io/badge/Live%20Demo-OK-green" alt="Live Demo (/healthz)">
+  </a>
+</p>
 
 ## **Overview**
 This repository contains the solution for the **Automation Pipeline Challenge C3**, which involves designing and partially implementing an infrastructure solution for a scalable, secure, and observable client-facing media search and download API service.  
