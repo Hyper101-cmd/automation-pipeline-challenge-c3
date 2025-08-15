@@ -31,17 +31,17 @@ Enable one-click rollback via Helm
 
 **Stages**
 
-validate – Run yamllint, ansible-lint, Ansible syntax check, and render templates locally
+**validate** – Run yamllint, ansible-lint, Ansible syntax check, and render templates locally
 
-build – Build and push API image (tags: latest + commit SHA)
+**build** – Build and push API image (tags: latest + commit SHA)
 
-deploy – Helm upgrade/install to target namespace with new image tag
+**deploy** – Helm upgrade/install to target namespace with new image tag
 
-smoke – Test /healthz endpoint in Kubernetes service
+**smoke** – Test /healthz endpoint in Kubernetes service
 
-promote – Manual approvals for staging → prod promotion
+**promote** – Manual approvals for staging → prod promotion
 
-rollback – Manual helm rollback to previous release
+**rollback** – Manual helm rollback to previous release
 
 **Secrets & Config**
 
@@ -58,9 +58,9 @@ Or use GitLab environment variables
 
 **Rollback Strategy**
 
-Helm: helm rollback to a previous release
+**Helm:** helm rollback to a previous release
 
-Image pinning: redeploy last-known-good image tag
+**Image pinning:** redeploy last-known-good image tag
 
 This pipeline covers automated validation, Kubernetes deployments with gated promotions, and rapid rollback, aligned to a modern containerized infrastructure.
 
