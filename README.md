@@ -41,12 +41,14 @@ Key highlights:
   <img src="docs/automation-pipeline.png" alt="Automation Pipeline" width="450">
 </a>
 
-## Features
-- Automated server and application setup using **Ansible** roles and playbooks.  
-- Configuration management for **NGINX**, **Zabbix agent**, and **maintenance tasks**.  
-- CI/CD pipeline integration with **GitLab CI/CD**.  
-- Modular inventory and variable management for multiple environments.  
-- Documentation of setup and outputs in `docs/submission.pdf`.
+## **Features**
+- **Infrastructure as Code**: Ansible playbooks and roles to provision and configure a load balancer, application servers, and monitoring agents.
+- **Role-Based Configuration Management**: Modular roles for Nginx, Zabbix Agent, and maintenance tasks enable reusability and easier maintenance.
+- **Security & HTTPS Support**: Automated SSL certificate creation and integration with Nginx for secure API access.
+- **Observability**: Zabbix Agent deployment and configuration for real-time monitoring and system health tracking.
+- **Automated Maintenance**: Playbooks to apply the latest OS patches and reboot servers automatically.
+- **CI/CD Integration**: GitLab pipeline with validation, Kubernetes deployment, smoke testing, promotion between environments, and rollback.
+- **Multi-Environment Support**: Flexible inventory and variable structure for dev, staging, and production without code changes.
 
 ## Repository Structure
 ```text
