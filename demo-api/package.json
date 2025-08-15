@@ -1,0 +1,14 @@
+{
+  "name": "demo-media-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Minimal mock API for the Automation Pipeline Challenge C3",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
