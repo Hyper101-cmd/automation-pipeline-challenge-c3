@@ -4,21 +4,20 @@
 [![Python](https://img.shields.io/badge/Python-3.11+-blue)](https://www.python.org/)  
 [![GitLab CI](https://img.shields.io/badge/GitLab-CI/CD-orange)](https://about.gitlab.com/stages-devops-lifecycle/continuous-integration/)
 
-## **Overview**  
-This repository contains the solution for the **Automation Pipeline Challenge C3**, a hands-on DevOps and Infrastructure Engineering task.  
+## **Overview**
+This repository contains the solution for the **Automation Pipeline Challenge C3**, a DevOps and Infrastructure Engineering task simulating a high-traffic **media search and download API**.
 
-**Scenario:**  
-The target system is a high-traffic **media search and download API** used by thousands of clients daily.  
-It queries **Elasticsearch** for metadata, retrieves media files from storage, and serves them securely over HTTPS.  
-The platform needs to be **scalable**, **secure**, and **observable** while supporting continuous updates.  
+The service:
+- Queries **Elasticsearch** for media metadata
+- Retrieves media files from storage
+- Serves them over **HTTPS** via an **NGINX load balancer**
 
-**Goals of this solution:**  
-- **Provisioning & Configuration:** Automated setup of load balancer and application servers with NGINX and SSL.  
-- **Monitoring & Observability:** Deployment of Zabbix Agent for real-time performance and health metrics.  
-- **Maintenance Automation:** OS patching and reboot automation for security and stability.  
-- **CI/CD Pipeline:** GitLab-based pipeline for validation, build, Kubernetes deployment, environment promotion, and rollback.  
-
-This solution demonstrates **Infrastructure as Code (IaC)** principles, operational best practices, and modular automation that can be adapted for production-scale environments.  
+The project demonstrates:
+- **Infrastructure as Code**: Ansible playbooks and roles to provision a load balancer and two application servers
+- **Security**: SSL/TLS configuration and OS patch automation
+- **Observability**: Zabbix agent deployment for real-time monitoring
+- **Scalability**: Modular design adaptable to multi-environment deployments
+- **CI/CD**: GitLab pipeline for automated validation, Kubernetes deployment, environment promotion, and rollback
 
 ## **Extended Description**
 The **Automation Pipeline Challenge C3** demonstrates an end-to-end automation solution for managing infrastructure and applications using **Ansible**. This project simulates a real-world enterprise environment where servers, services, and monitoring agents must be deployed consistently and efficiently across multiple hosts.  
