@@ -40,9 +40,11 @@ Key highlights:
 ---
 
 ## Automation Pipeline Diagram
-<a href="docs/automation-pipeline.png">
-  <img src="docs/automation-pipeline.png" alt="Automation Pipeline" width="450">
-</a>
+<p align="center">
+  <a href="docs/automation-pipeline.png" target="_blank">
+    <img src="docs/automation-pipeline.png" alt="Automation Pipeline" width="450">
+  </a>
+</p>
 
 ---
 
