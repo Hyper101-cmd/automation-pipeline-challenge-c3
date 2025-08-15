@@ -176,5 +176,38 @@ zabbix_agentd.conf
 
 `ansible/temp/` is intentionally in `.gitignore` so generated files don’t get committed.
 
+## **CI/CD Pipeline (GitLab)**
+
+Automates testing, build, deployment, and rollback for the API on Kubernetes.
+
+**Goals**
+- Enforce quality through YAML linting, Ansible lint, and syntax checking.
+- Build API container and push to GitLab Container Registry.
+- Deploy to Kubernetes (Dev → Staging → Prod) using Helm or `kubectl`.
+- Run smoke tests after each deployment.
+- Enable one-click rollback via Helm.
+
+**Stages**
+- **validate** – Run `yamllint`, `ansible-lint`, Ansible syntax check, and render templates locally.  
+- **build** – Build and push API image (tags: `latest` + commit SHA).  
+- **deploy** – Helm upgrade/install to target namespace with new image tag.  
+- **smoke** – Test `/healthz` endpoint in Kubernetes service.  
+- **promote** – Manual approvals for staging → prod promotion.  
+- **rollback** – Manual Helm rollback to previous release.
+
+**Secrets & Config**
+- Store secrets as masked GitLab CI/CD variables:  
+  `KUBE_CONFIG`, `HELM_REPO_AUTH`, `ANSIBLE_VAULT_PASSWORD`
+- Use Kubernetes Secrets or GitLab Vault for sensitive values.
+- Environment configs:  
+  - Separate Helm values files (`values-dev.yaml`, `values-staging.yaml`, `values-prod.yaml`)  
+  - Or use GitLab environment variables.
+
+**Rollback Strategy**
+- **Helm**: `helm rollback` to a previous release.  
+- **Image pinning**: Redeploy last-known-good image tag.
+
+This pipeline covers automated validation, Kubernetes deployments with gated promotions, and rapid rollback, aligned to a modern containerized infrastructure.
+
 ## **License**
 This project is licensed under the MIT License.
