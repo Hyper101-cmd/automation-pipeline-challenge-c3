@@ -105,30 +105,27 @@ Pipeline stages include syntax checking, role linting, and deployment validation
 
 Contributions are welcome. To contribute:
 
-Fork the repository.
+1. Fork the repository.
 
-Create a feature branch:
+2. Create a feature branch:
 
 git checkout -b feature/your-feature
 
-
-Commit changes:
+3. Commit changes:
 
 git commit -m 'Add feature'
 
-
-Push to the branch:
+4. Push to the branch:
 
 git push origin feature/your-feature
 
+5. Open a pull request.
 
-Open a pull request.
-
-Local Validation (No Servers Required)
+## **Local Validation (No Servers Required)**
 
 This repo includes a localhost inventory and a render-only playbook so you can validate roles and templates without access to the challenge infrastructure.
 
-What it does:
+# What it does:
 
 Renders NGINX (LB + web) and Zabbix Agent configs to ansible/temp/
 
@@ -136,15 +133,15 @@ Doesn’t touch your system services
 
 Proves variables and Jinja2 templates compile cleanly
 
-Run it:
+# Run it:
 
-# From the repo root
+#From the repo root
 ansible-playbook -i ansible/inventories/localhost.ini ansible/playbooks/render_templates.yml
 ls -l ansible/temp/
-# Expect: site-lb.conf, site-web.conf, zabbix_agentd.conf
+#Expect: site-lb.conf, site-web.conf, zabbix_agentd.conf
 
 
-Files Involved:
+# Files Involved:
 ansible/inventories/localhost.ini — localhost-only inventory
 
 ansible/playbooks/render_templates.yml — renders templates to ansible/temp/
