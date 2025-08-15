@@ -229,8 +229,11 @@ This pipeline covers automated validation, Kubernetes deployments with gated pro
 
 ## **Executable Demo**
 
-You can explore a running instance of the demo API here:  
-[![Open in CodeSandbox](https://img.shields.io/badge/Open%20in-CodeSandbox-blue?logo=codesandbox)](https://kncqz4.csb.app)
+<p align="center">
+  <a href="https://kncqz4.csb.app" target="_blank">
+    <img src="https://img.shields.io/badge/Open%20in-CodeSandbox-blue?logo=codesandbox" alt="Open in CodeSandbox">
+  </a>
+</p>
 
 ### **Local Run (WSL)**
 
