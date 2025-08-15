@@ -42,3 +42,6 @@ terraform.tfvars
 !ansible/roles/**/defaults/*.yml
 !ansible/roles/**/vars/*.yml
 !ansible/roles/**/meta/*.yml
+
+# Allow main Ansible config
+!ansible/ansible.cfg
