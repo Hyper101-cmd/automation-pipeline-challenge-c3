@@ -13,8 +13,8 @@ The **Automation Pipeline Challenge C3** demonstrates an end-to-end automation s
 Key highlights of this project:  
 - **Infrastructure as Code (IaC):** Using Ansible roles and playbooks to standardize deployment and configuration.  
 - **Modular Architecture:** Roles for NGINX, Zabbix agent, and maintenance tasks allow reusability and easier maintenance.  
-CI/CD Pipeline (GitLab)
 
+CI/CD Pipeline (GitLab)
 Automates testing, build, deployment, and rollback for the API on Kubernetes.
 
 Goals
@@ -32,10 +32,15 @@ Enable one-click rollback via Helm
 Stages
 
 validate – Run yamllint, ansible-lint, Ansible syntax check, and render templates locally
+
 build – Build and push API image (tags: latest + commit SHA)
+
 deploy – Helm upgrade/install to target namespace with new image tag
+
 smoke – Test /healthz endpoint in Kubernetes service
+
 promote – Manual approvals for staging → prod promotion
+
 rollback – Manual helm rollback to previous release
 
 Secrets & Config
@@ -58,8 +63,6 @@ Helm: helm rollback to a previous release
 Image pinning: redeploy last-known-good image tag
 
 This pipeline covers automated validation, Kubernetes deployments with gated promotions, and rapid rollback, aligned to a modern containerized infrastructure.
-
-Do you also want me to make a diagram of this pipeline so it looks more visual in your README? That could make it stand out.
 
 ## Automation Pipeline Diagram
 <a href="docs/automation-pipeline.png">
