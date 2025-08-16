@@ -14,3 +14,6 @@ ansible/temp/** linguist-generated
 # --- Normalize YAML classification
 *.yml linguist-language=YAML
 *.yaml linguist-language=YAML
+
+# Treat Helm templates as Jinja instead of Go
+*.tpl linguist-language=Jinja
