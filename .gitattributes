@@ -20,3 +20,10 @@ ansible/temp/** linguist-generated
 *.yml linguist-language=YAML
 *.yaml linguist-language=YAML
 
+# Count Ansible and YAML files correctly
+*.yml linguist-detectable=true linguist-language=YAML
+*.yaml linguist-detectable=true linguist-language=YAML
+
+# Don’t let Helm templates be misclassified as Go
+helm/** linguist-language=YAML
+
