@@ -1,0 +1,16 @@
+# --- Docs & images shouldn't affect language stats
+docs/** linguist-documentation
+*.png linguist-documentation
+*.jpg linguist-documentation
+*.svg linguist-documentation
+
+# --- Helm charts: avoid being labeled as "Smarty"
+# Helm uses Go templates; treat *.tpl as Go to better reflect intent
+demo-api/helm/** linguist-language=Go
+
+# --- Ignore generated/temp outputs
+ansible/temp/** linguist-generated
+
+# --- Normalize YAML classification
+*.yml linguist-language=YAML
+*.yaml linguist-language=YAML
