@@ -4,16 +4,19 @@ docs/** linguist-documentation
 *.jpg linguist-documentation
 *.svg linguist-documentation
 
-# --- Helm charts: avoid being labeled as "Smarty"
-# Helm uses Go templates; treat *.tpl as Go to better reflect intent
+# --- Helm charts: classify as Go templates (or Jinja) to avoid "Smarty"
 demo-api/helm/** linguist-language=Go
+# If you prefer Jinja instead of Go, use the next line and remove the one above:
+# demo-api/helm/** linguist-language=Jinja
+
+# --- Ansible Jinja templates: don't let them dominate the language bar
+ansible/roles/**/templates/** linguist-detectable=false
+*.j2 linguist-detectable=false
 
 # --- Ignore generated/temp outputs
 ansible/temp/** linguist-generated
 
-# --- Normalize YAML classification
+# --- Normalize YAML classification for playbooks, vars, inventories
 *.yml linguist-language=YAML
 *.yaml linguist-language=YAML
 
-# Treat Helm templates as Jinja instead of Go
-*.tpl linguist-language=Jinja
