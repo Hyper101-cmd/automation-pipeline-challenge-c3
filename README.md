@@ -1,7 +1,7 @@
 # **Automation Pipeline Challenge C3**
 
 <p align="center">
-  <a href="https://codesandbox.io/p/github/joycemwangi/automation-pipeline-challenge-c3/main" target="_blank">
+  <a href="https://codesandbox.io/p/github/joycemwangi/automation-pipeline-ch3/main" target="_blank">
     <img src="https://img.shields.io/badge/Open%20in-CodeSandbox-blue?logo=codesandbox" alt="Open in CodeSandbox">
   </a>
   &nbsp;
@@ -24,7 +24,11 @@
   </a>
 </p>
 
-[![View Submission PDF](https://img.shields.io/badge/Submission-PDF-informational)](https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/docs/submission.pdf)
+<p align="center">
+  <a href="https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/docs/submission.pdf">
+    <img src="https://img.shields.io/badge/Submission-PDF-informational" alt="View Submission PDF">
+  </a>
+</p>
 
 ---
 
