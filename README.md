@@ -122,6 +122,7 @@ automation-pipeline-challenge-c3/
 ├── .gitlab-ci.yml
 ├── README.md
 └── docs/
+    ├── automation-pipeline.png
     └── submission.pdf
 ```
 
