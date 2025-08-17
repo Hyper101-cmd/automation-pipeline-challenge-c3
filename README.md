@@ -24,7 +24,8 @@
   </a>
 </p>
 ---
-**📄 Submission PDF:** [docs/submission.pdf](docs/submission.pdf)
+
+[📄 View PDF Submission](https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/docs/Joyce_Mwangi_Imago_ChallengeC3.pdf)
 
 ## **Overview**
 This repository contains the solution for the **Automation Pipeline Challenge C3**, which involves designing and partially implementing an infrastructure solution for a scalable, secure, and observable client-facing media search and download API service.  
