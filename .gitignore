@@ -23,6 +23,19 @@ terraform.tfvars
 # Logs
 *.log
 
+# Node.js
+node_modules/
+package-lock.json
+
+# Helm
+*.tgz
+demo-api/helm/**/Chart.yaml
+
+# Ignore compiled output / temp
+dist/
+build/
+.cache/
+
 # Allow main playbooks
 !ansible/playbooks/*.yml
 
@@ -36,18 +49,13 @@ terraform.tfvars
 !ansible/roles/**/vars/*.yml
 !ansible/roles/**/meta/*.yml
 
-# Allow Ansible role YAMLs
-!ansible/roles/**/tasks/*.yml
-!ansible/roles/**/handlers/*.yml
-!ansible/roles/**/defaults/*.yml
-!ansible/roles/**/vars/*.yml
-!ansible/roles/**/meta/*.yml
-
 # Allow main Ansible config
 !ansible/ansible.cfg
 
+# GitLab CI/CD
 !.gitlab-ci.yml
 
 # Allow Helm and demo K8s YAMLs
 !demo-api/helm/**/*.yaml
 !demo-api/k8s/*.yaml
+
