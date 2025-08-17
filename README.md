@@ -24,7 +24,7 @@
   </a>
 </p>
 
-                             [![View Submission PDF](https://img.shields.io/badge/Submission-PDF-informational)](https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/docs/submission.pdf)
+[![View Submission PDF](https://img.shields.io/badge/Submission-PDF-informational)](https://github.com/joycemwangi/automation-pipeline-challenge-c3/blob/main/docs/submission.pdf)
 
 ---
 
