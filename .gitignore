@@ -60,3 +60,4 @@ build/
 !demo-api/k8s/*.yaml
 
 ansible/inventory
+ansible/roles/nginx/tasks/main.yml.bak
