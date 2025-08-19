@@ -24,7 +24,7 @@
     nginx_listen_port: 80
   roles:
     - role: nginx
-    - role: zabbix_agent
+    - role: community.zabbix.zabbix_agent
   tags:
     - web
     - nginx
@@ -35,7 +35,7 @@
   hosts: zabbix
   become: true
   roles:
-    - role: zabbix_agent
+    - role: community.zabbix.zabbix_agent
   tags:
     - zabbix
 
