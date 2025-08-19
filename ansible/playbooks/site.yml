@@ -1,5 +1,4 @@
 # ansible/playbooks/site.yml
----
 # 1) Load Balancer (NGINX as reverse proxy to web nodes)
 - name: Configure load balancer
   hosts: lb

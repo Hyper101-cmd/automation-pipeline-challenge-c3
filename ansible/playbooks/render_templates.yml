@@ -6,7 +6,7 @@
     nginx_upstreams: ["127.0.0.1"]
     server_name: "example.local"
     ssl_cert_path: /etc/ssl/certs/imago-selfsigned.crt
-    ssl_key_path:  /etc/ssl/private/imago-selfsigned.key
+    ssl_key_path: /etc/ssl/private/imago-selfsigned.key
     nginx_listen_port: 80
     nginx_listen_port_tls: 443
     nginx_app_port: 8080

@@ -1,4 +1,3 @@
----
 - name: Install Zabbix agent packages
   ansible.builtin.package:
     name: "{{ zabbix_agent_packages }}"

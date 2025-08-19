@@ -5,7 +5,7 @@ server_name: "_"                      # change to FQDN in prod
 
 # TLS paths used by both LB and web nodes
 ssl_cert_path: /etc/ssl/certs/imago-selfsigned.crt
-ssl_key_path:  /etc/ssl/private/imago-selfsigned.key
+ssl_key_path: /etc/ssl/private/imago-selfsigned.key
 
 # Common ports
 nginx_listen_port: 80                 # HTTP (redirects to HTTPS)
@@ -18,10 +18,10 @@ nginx_is_load_balancer: false         # site.yml sets true on [lb]
 nginx_proxy_local: false              # set true on web nodes if proxying to 127.0.0.1:{{ nginx_app_port }}
 
 # Logging (optional, your template uses these files implicitly)
-nginx_lb_access_log:  /var/log/nginx/lb_access.log
-nginx_lb_error_log:   /var/log/nginx/lb_error.log
+nginx_lb_access_log: /var/log/nginx/lb_access.log
+nginx_lb_error_log: /var/log/nginx/lb_error.log
 nginx_web_access_log: /var/log/nginx/web_access.log
-nginx_web_error_log:  /var/log/nginx/web_error.log
+nginx_web_error_log: /var/log/nginx/web_error.log
 
 # Health endpoint
 nginx_health_path: /healthz
