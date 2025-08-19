@@ -4,8 +4,8 @@ nginx_worker_processes: auto
 server_name: "_"                      # change to FQDN in prod
 
 # TLS paths used by both LB and web nodes
-ssl_cert_path: /etc/ssl/certs/imago-selfsigned.crt
-ssl_key_path: /etc/ssl/private/imago-selfsigned.key
+ssl_cert_path: /etc/ssl/certs/mediaapp-selfsigned.crt
+ssl_key_path: /etc/ssl/private/mediaapp-selfsigned.key
 
 # Common ports
 nginx_listen_port: 80                 # HTTP (redirects to HTTPS)
@@ -35,3 +35,5 @@ zabbix_agent_hostname_item: system.hostname
 
 # ---------- OS / PKG ----------
 pkg_mgr: apt
+
+app_name: mediaapp
