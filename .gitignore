@@ -59,3 +59,4 @@ build/
 !demo-api/helm/**/*.yaml
 !demo-api/k8s/*.yaml
 
+ansible/inventory
