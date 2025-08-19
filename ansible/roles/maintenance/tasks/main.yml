@@ -1,16 +1,6 @@
----
-- name: Update apt cache
-  apt:
-    update_cache: yes
-
-- name: Upgrade packages
-  apt:
+- name: Update packages
+  ansible.builtin.apt:
+    update_cache: true
     upgrade: dist
-  register: upgrade_result
-
-- name: Reboot if kernel or important packages changed
-  reboot:
-    msg: "Rebooting after package upgrades"
-    connect_timeout: 5
-    reboot_timeout: 600
-  when: upgrade_result.changed
+  register: pkg_update
+  notify: Reboot system
