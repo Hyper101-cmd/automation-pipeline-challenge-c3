@@ -3,6 +3,7 @@ name: Lint
 on:
   push:
   pull_request:
+  workflow_dispatch:   # allow manual runs from the UI
 
 jobs:
   lint:
@@ -12,6 +13,7 @@ jobs:
       ANSIBLE_COLLECTIONS_PATH: ${{ github.workspace }}/ansible/collections
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -24,12 +26,12 @@ jobs:
 
       - name: Install Galaxy collections (community.zabbix)
         run: |
-          mkdir -p "$ANSIBLE_COLLECTIONS_PATH"
-          ansible-galaxy collection install -r ansible/collections/requirements.yml -p "$ANSIBLE_COLLECTIONS_PATH"
-          echo "== Collections installed ==" && ansible-galaxy collection list
+          ansible-galaxy collection install \
+            -r ansible/collections/requirements.yml \
+            -p "$ANSIBLE_COLLECTIONS_PATH"
 
-      - name: Run ansible-lint
-        run: ansible-lint -v -c .ansible-lint.yml ansible/playbooks/site.yml
+      - name: Lint (ansible-lint)
+        run: ansible-lint -c .ansible-lint.yml ansible/playbooks/site.yml
 
-      - name: Run yamllint
+      - name: Lint (yamllint)
         run: yamllint -c .yamllint ansible/playbooks ansible/roles ansible/group_vars
