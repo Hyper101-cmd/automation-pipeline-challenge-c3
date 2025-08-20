@@ -65,3 +65,5 @@ ansible/roles/nginx/tasks/main.yml.bak
 !.yamllint
 !.pre-commit-config.yaml
 !Makefile
+!/.github
+!/.github/**
