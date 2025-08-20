@@ -61,3 +61,7 @@ build/
 
 ansible/inventory
 ansible/roles/nginx/tasks/main.yml.bak
+!.ansible-lint.yml
+!.yamllint
+!.pre-commit-config.yaml
+!Makefile

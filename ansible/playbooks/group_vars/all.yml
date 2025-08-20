@@ -1,3 +1,4 @@
+---
 # ansible/group_vars/all.yml
 # ---------- NGINX ----------
 nginx_worker_processes: auto
@@ -28,12 +29,18 @@ nginx_health_path: /healthz
 
 # ---------- ZABBIX AGENT ----------
 zabbix_server: 192.168.10.5
-zabbix_agent_packages:
-  - zabbix-agent
-zabbix_agent_serveractive: "{{ zabbix_server }}"
-zabbix_agent_hostname_item: system.hostname
-
 # ---------- OS / PKG ----------
 pkg_mgr: apt
 
 app_name: mediaapp
+
+# Zabbix agent packages for Ubuntu 24.04 (Noble)
+zabbix_agent_packages:
+  - { name: zabbix-agent2, state: present }
+  - { name: zabbix-get, state: present }
+  - { name: zabbix-sender, state: present }
+
+# ---------- ZABBIX AGENT ----------
+zabbix_agent_server: "127.0.0.1, 192.168.10.5"        # fills 'Server='
+zabbix_agent_serveractive: "192.168.10.5"  # fills 'ServerActive='
+zabbix_agent_hostname_item: system.hostname
