@@ -8,6 +8,9 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
     env:
       ANSIBLE_CONFIG: ansible/ansible.cfg
       ANSIBLE_COLLECTIONS_PATH: ${{ github.workspace }}/ansible/collections
@@ -45,16 +48,15 @@ REQ
           ansible-galaxy collection list
 
       - name: Lint (ansible-lint)
-        run: |
-          ansible-lint -c .ansible-lint.yml ansible/playbooks/site.yml
+        run: ansible-lint -c .ansible-lint.yml ansible/playbooks/site.yml
 
       - name: YAML lint (project code only)
         run: |
           paths=(ansible/playbooks ansible/roles ansible/group_vars)
           keep=()
-          for p in "${paths[@]}"; do [[ -d "$p" ]] && keep+=("$p"); done
-          if (( \${#keep[@]} )); then
-            yamllint -c .yamllint "\${keep[@]}"
+          for p in "${paths[@]}"; do [ -d "$p" ] && keep+=("$p"); done
+          if [ "${#keep[@]}" -gt 0 ]; then
+            yamllint -c .yamllint "${keep[@]}"
           else
             echo "No YAML paths to lint; skipping."
           fi
