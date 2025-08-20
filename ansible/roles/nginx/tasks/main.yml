@@ -17,8 +17,11 @@
     owner: root
     group: "{{ item.group | default('root') }}"
   loop:
-    - { path: /etc/ssl/certs,   mode: '0755' }
-    - { path: /etc/ssl/private, mode: '0710', group: ssl-cert }
+    - path: /etc/ssl/certs
+      mode: '0755'
+    - path: /etc/ssl/private
+      mode: '0710'
+      group: ssl-cert
 
 - name: Ensure ssl-cert package (creates snake-oil certs on Debian/Ubuntu)
   ansible.builtin.apt:
@@ -29,19 +32,17 @@
 
 - name: Check cert/key sources on remote
   become: true
-  become: true
   ansible.builtin.stat:
     path: "{{ item }}"
     get_checksum: false
-    get_checksum: false
-  register: cert_key_src_stats
+  register: nginx_cert_key_src_stats
   loop:
     - "{{ ssl_cert_src | default('/etc/ssl/certs/ssl-cert-snakeoil.pem') }}"
-    - "{{ ssl_key_src  | default('/etc/ssl/private/ssl-cert-snakeoil.key') }}"
+    - "{{ ssl_key_src | default('/etc/ssl/private/ssl-cert-snakeoil.key') }}"
 - name: Set cert/key src facts
   ansible.builtin.set_fact:
-    cert_src_exists: "{{ cert_key_src_stats.results[0].stat.exists | default(false) }}"
-    key_src_exists: "{{ cert_key_src_stats.results[1].stat.exists | default(false) }}"
+    nginx_cert_src_exists: "{{ nginx_cert_key_src_stats.results[0].stat.exists | default(false) }}"
+    nginx_key_src_exists: "{{ nginx_cert_key_src_stats.results[1].stat.exists | default(false) }}"
 
 - name: Deploy certificate from remote
   ansible.builtin.copy:
@@ -51,7 +52,7 @@
     group: root
     mode: '0644'
     remote_src: true
-  when: cert_src_exists | bool
+  when: nginx_cert_src_exists | bool
   notify: Reload nginx
 
 - name: Deploy certificate from role/controller
@@ -62,7 +63,7 @@
     group: root
     mode: '0644'
     remote_src: false
-  when: not (cert_src_exists | bool)
+  when: not (nginx_cert_src_exists | bool)
   notify: Reload nginx
 
 - name: Deploy private key from remote
@@ -73,7 +74,7 @@
     group: ssl-cert
     mode: '0640'
     remote_src: true
-  when: key_src_exists | bool
+  when: nginx_key_src_exists | bool
   notify: Reload nginx
 
 - name: Deploy private key from role/controller
@@ -84,7 +85,7 @@
     group: ssl-cert
     mode: '0640'
     remote_src: false
-  when: not (key_src_exists | bool)
+  when: not (nginx_key_src_exists | bool)
   notify: Reload nginx
 
 - name: Deploy nginx site config

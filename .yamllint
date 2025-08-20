@@ -1,17 +1,13 @@
+---
 extends: default
-
+ignore:
+  - "ansible/collections/**"
 rules:
-  comments-indentation: disable
-  line-length:
-    max: 120
-    level: error
-  document-start: disable   # allow or ignore leading '---'
-  empty-lines: disable      # allow blank lines
-  new-lines:
-    type: unix
-
-ignore: |
-  .git/
-  node_modules/
-  demo-api/node_modules/
-  demo-api/helm/**/templates/*.yaml
+  comments-indentation: false
+  comments:
+    min-spaces-from-content: 1
+  braces:
+    max-spaces-inside: 1
+  octal-values:
+    forbid-implicit-octal: true
+    forbid-explicit-octal: true
