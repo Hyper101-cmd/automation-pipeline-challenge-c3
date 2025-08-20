@@ -3,7 +3,7 @@ name: Lint
 on:
   push:
   pull_request:
-  workflow_dispatch:   # allow manual runs from the UI
+  workflow_dispatch:
 
 jobs:
   lint:
@@ -13,25 +13,40 @@ jobs:
       ANSIBLE_COLLECTIONS_PATH: ${{ github.workspace }}/ansible/collections
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Install ansible + linters
+      - name: Install ansible & linters
         run: |
           python -m pip install -U pip
           pip install --user ansible-core ansible-lint yamllint
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
 
-      - name: Install Galaxy collections (community.zabbix)
+      - name: Create Galaxy requirements if missing
+        if: ${{ hashFiles('ansible/collections/requirements.yml') == '' }}
+        run: |
+          mkdir -p ansible/collections
+          printf "%s\n" "---" "collections:" "  - name: community.zabbix" \
+            > ansible/collections/requirements.yml
+
+      - name: Install Galaxy collections
         run: |
           ansible-galaxy collection install \
             -r ansible/collections/requirements.yml \
             -p "$ANSIBLE_COLLECTIONS_PATH"
+          ansible-galaxy collection list
 
       - name: Lint (ansible-lint)
         run: ansible-lint -c .ansible-lint.yml ansible/playbooks/site.yml
 
-      - name: Lint (yamllint)
-        run: yamllint -c .yamllint ansible/playbooks ansible/roles ansible/group_vars
+      - name: YAML lint (project code only)
+        run: |
+          paths=(ansible/playbooks ansible/roles ansible/group_vars)
+          keep=()
+          for p in "${paths[@]}"; do [ -d "$p" ] && keep+=("$p"); done
+          if [ "${#keep[@]}" -gt 0 ]; then
+            yamllint -c .yamllint "${keep[@]}"
+          else
+            echo "No YAML directories found; skipping yamllint"
+          fi

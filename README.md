@@ -33,8 +33,8 @@
 ---
 
 ## **Overview**
-This repository contains the solution for the **Automation Pipeline Challenge C3**, which involves designing and partially implementing an infrastructure solution for a scalable, secure, and observable client-facing media search and download API service.  
-The API queries Elasticsearch for metadata, retrieves media files from storage, and serves them over HTTPS.  
+This repository contains the solution for the **Automation Pipeline Challenge C3**, which involves designing and partially implementing an infrastructure solution for a scalable, secure, and observable client-facing media search and download API service.
+The API queries Elasticsearch for metadata, retrieves media files from storage, and serves them over HTTPS.
 The core services run on Linux, and the solution reflects a transition toward a modern, containerized environment with automation, reliability, and operational excellence as priorities.
 
 The deployment target includes:
@@ -53,7 +53,7 @@ The challenge tasks included:
 ---
 
 ## **Extended Description**
-This project demonstrates an end-to-end automation workflow for deploying and managing Linux-based infrastructure and application services.  
+This project demonstrates an end-to-end automation workflow for deploying and managing Linux-based infrastructure and application services.
 The automation is designed to be modular, reusable, and environment-agnostic, supporting multiple deployment targets with minimal code changes.
 
 Key highlights:
@@ -136,10 +136,10 @@ automation-pipeline-challenge-c3/
 
 
 ## **Prerequisites**
-- **Ansible** >= 2.14  
-- **Python** >= 3.11  
-- Git installed locally  
-- SSH access to target hosts  
+- **Ansible** >= 2.14
+- **Python** >= 3.11
+- Git installed locally
+- SSH access to target hosts
 
 ---
 ## **Setup & Usage**
@@ -172,16 +172,16 @@ ansible-playbook -i ansible/inventories/hosts.ini ansible/playbooks/certs_create
 We welcome contributions to improve this project.
 
 **Steps**
-1. **Fork the repository** on GitHub.  
-2. **Create a feature branch**  
+1. **Fork the repository** on GitHub.
+2. **Create a feature branch**
    ```bash
    git checkout -b feature/your-feature
    ```
-3. **Commit changes**  
+3. **Commit changes**
    ```bash
    git commit -m "Add feature"
    ```
-4. **Push to your branch**  
+4. **Push to your branch**
    ```bash
    git push origin feature/your-feature
    ```
@@ -216,15 +216,15 @@ zabbix_agentd.conf
 ```
 
 **Files Involved**
-- `ansible/inventories/localhost.ini` — localhost-only inventory  
-- `ansible/playbooks/render_templates.yml` — renders templates to `ansible/temp/`  
-- `ansible/temp/` — output workspace (ignored by Git except for `.gitkeep`)  
+- `ansible/inventories/localhost.ini` — localhost-only inventory
+- `ansible/playbooks/render_templates.yml` — renders templates to `ansible/temp/`
+- `ansible/temp/` — output workspace (ignored by Git except for `.gitkeep`)
 
 `ansible/temp/` is intentionally in `.gitignore` so generated files don’t get committed.
 
 ## **CI/CD Pipeline (GitLab)**
 
-Automates testing, build, deployment, and rollback for the API on Kubernetes.  
+Automates testing, build, deployment, and rollback for the API on Kubernetes.
 The complete pipeline definition is available in [`.gitlab-ci.yml`](./.gitlab-ci.yml).
 
 **Goals**
@@ -235,23 +235,23 @@ The complete pipeline definition is available in [`.gitlab-ci.yml`](./.gitlab-ci
 - Enable one-click rollback via Helm.
 
 **Stages**
-- **validate** – Run `yamllint`, `ansible-lint`, Ansible syntax check, and render templates locally.  
-- **build** – Build and push API image (tags: `latest` + commit SHA).  
-- **deploy** – Helm upgrade/install to target namespace with new image tag.  
-- **smoke** – Test `/healthz` endpoint in Kubernetes service.  
-- **promote** – Manual approvals for staging → prod promotion.  
+- **validate** – Run `yamllint`, `ansible-lint`, Ansible syntax check, and render templates locally.
+- **build** – Build and push API image (tags: `latest` + commit SHA).
+- **deploy** – Helm upgrade/install to target namespace with new image tag.
+- **smoke** – Test `/healthz` endpoint in Kubernetes service.
+- **promote** – Manual approvals for staging → prod promotion.
 - **rollback** – Manual Helm rollback to previous release.
 
 **Secrets & Config**
-- Store secrets as masked GitLab CI/CD variables:  
+- Store secrets as masked GitLab CI/CD variables:
   `KUBE_CONFIG`, `HELM_REPO_AUTH`, `ANSIBLE_VAULT_PASSWORD`
 - Use Kubernetes Secrets or GitLab Vault for sensitive values.
-- Environment configs:  
-  - Separate Helm values files (`values-dev.yaml`, `values-staging.yaml`, `values-prod.yaml`)  
+- Environment configs:
+  - Separate Helm values files (`values-dev.yaml`, `values-staging.yaml`, `values-prod.yaml`)
   - Or use GitLab environment variables.
 
 **Rollback Strategy**
-- **Helm**: `helm rollback` to a previous release.  
+- **Helm**: `helm rollback` to a previous release.
 - **Image pinning**: Redeploy last-known-good image tag.
 
 This pipeline covers automated validation, Kubernetes deployments with gated promotions, and rapid rollback, aligned to a modern containerized infrastructure.
@@ -269,9 +269,9 @@ This pipeline covers automated validation, Kubernetes deployments with gated pro
 1. **Open a terminal** and go to the `demo-api` folder:
    ```bash
    cd ~/automation-pipeline-challenge-c3/demo-api
-   
+
 2. **Install dependencies:**
-   
+
          npm install
 
 3. **Start the API (runs on port 8080):**
@@ -279,7 +279,7 @@ This pipeline covers automated validation, Kubernetes deployments with gated pro
          npm start
 
      You should see:
-   
+
          Demo Media API listening on :8080
 
 4. **Test the endpoints from a second terminal:**
@@ -288,19 +288,19 @@ This pipeline covers automated validation, Kubernetes deployments with gated pro
 
           curl -fsSL http://localhost:8080/healthz
     Output:
-   
+
           ok
 
     Example search
-   
+
          curl -fsSL "http://localhost:8080/search?q=sunset"
 
     Output:
-   
+
          {"query":"sunset","count":1,"results":[{"id":"img_001","title":"Sunset over dunes","type":"image"}]}
 
   Note: This mock API is provided for demonstration purposes only and does not connect to real Elasticsearch or storage backends.
-  
+
 ## **License**
 This project is licensed under the MIT License.
 # trigger linguist refresh

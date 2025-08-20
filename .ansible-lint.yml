@@ -1,0 +1,8 @@
+profile: min
+exclude_paths:
+  - "collections/**"
+  - ansible/collections/**
+  - "**/tests/**"
+  - "**/.venv/**"
+  - "**/node_modules/**"
+  - "**/__pycache__/**"

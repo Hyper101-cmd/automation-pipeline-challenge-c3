@@ -1,49 +1,60 @@
+---
 # ansible/playbooks/site.yml
-# 1) Load Balancer (NGINX as reverse proxy to web nodes)
+
+# 1) Load Balancer
 - name: Configure load balancer
   hosts: lb
   become: true
-  vars:
-    nginx_is_load_balancer: true
-    # Build upstream list from inventory 'web' group automatically
-    nginx_upstreams: "{{ groups['web'] | default([]) }}"
-    nginx_listen_port: 80
-    nginx_proxy_port: 80
+  tags: [lb, nginx]
   roles:
     - role: nginx
-  tags:
-    - lb
-    - nginx
 
-# 2) Web nodes (NGINX for site + Zabbix Agent)
+# 2) Web nodes
 - name: Configure web nodes
   hosts: web
   become: true
-  vars:
-    nginx_is_load_balancer: false
-    nginx_listen_port: 80
+  gather_facts: true
+  tags: [web]
+
+  pre_tasks:
+    - name: Gather facts (always)
+      ansible.builtin.setup:
+      tags: [always]
+
+    - name: Ensure apt extended_states is writable (prevents apt-mark errors)
+      ansible.builtin.file:
+        path: /var/lib/apt/extended_states
+        state: touch
+        owner: root
+        group: root
+        mode: '0644'
+      become: true
+      tags: [zabbix]
+
+    - name: Update apt cache early (robust)
+      ansible.builtin.apt:
+        update_cache: true
+        force_apt_get: true
+        lock_timeout: 60
+      become: true
+      tags: [always]
+
+    - name: Ensure gnupg is present (safe for Zabbix repo tasks)
+      ansible.builtin.apt:
+        name: gnupg
+        state: present
+        force_apt_get: true
+        lock_timeout: 60
+      become: true
+      tags: [zabbix]
+
   roles:
     - role: nginx
+      tags: [nginx]
     - role: community.zabbix.zabbix_agent
-  tags:
-    - web
-    - nginx
-    - zabbix
-
-# 3) Zabbix Agent host (if you want the agent running there as well)
-- name: Configure zabbix agent host
-  hosts: zabbix
-  become: true
-  roles:
-    - role: community.zabbix.zabbix_agent
-  tags:
-    - zabbix
-
-# 4) Optional: maintenance tasks (safe to run anytime or via --tags maintenance)
-- name: Run maintenance tasks
-  hosts: all
-  become: true
-  roles:
-    - role: maintenance
-  tags:
-    - maintenance
+      tags: [zabbix]
+      vars:
+        zabbix_agent_packages:
+          - { name: zabbix-agent2, state: present }
+          - { name: zabbix-get, state: present }
+          - { name: zabbix-sender, state: present }

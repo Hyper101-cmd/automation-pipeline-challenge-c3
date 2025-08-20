@@ -1,3 +1,4 @@
+---
 - name: Update packages
   ansible.builtin.apt:
     update_cache: true

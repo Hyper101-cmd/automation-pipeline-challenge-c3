@@ -1,3 +1,4 @@
+---
 - name: Apply OS patches and reboot if needed
   hosts: web
   become: true
