@@ -13,7 +13,6 @@ jobs:
       ANSIBLE_COLLECTIONS_PATH: ${{ github.workspace }}/ansible/collections
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -28,7 +27,11 @@ jobs:
         run: |
           mkdir -p ansible/collections
           if [ ! -f ansible/collections/requirements.yml ]; then
-            printf '%s\n' '---' 'collections:' '  - name: community.zabbix' > ansible/collections/requirements.yml
+            cat > ansible/collections/requirements.yml <<'REQ'
+---
+collections:
+  - name: community.zabbix
+REQ
           fi
 
       - name: Install Galaxy collections
@@ -36,9 +39,20 @@ jobs:
           ansible-galaxy collection install \
             -r ansible/collections/requirements.yml \
             -p "$ANSIBLE_COLLECTIONS_PATH"
+          ansible-galaxy collection list
 
       - name: Lint (ansible-lint)
         run: ansible-lint -c .ansible-lint.yml ansible/playbooks/site.yml
 
       - name: YAML lint (project code only)
-        run: yamllint -c .yamllint ansible/playbooks ansible/roles ansible/group_vars
+        shell: bash
+        run: |
+          set -e
+          paths=(ansible/playbooks ansible/roles ansible/group_vars)
+          keep=()
+          for p in "${paths[@]}"; do [[ -d "$p" ]] && keep+=("$p"); done
+          if (( ${#keep[@]} )); then
+            yamllint -c .yamllint "${keep[@]}"
+          else
+            echo "No YAML paths to lint; skipping."
+          fi
