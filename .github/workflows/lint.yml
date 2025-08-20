@@ -27,11 +27,9 @@ jobs:
       - name: Prepare Galaxy requirements (fallback)
         run: |
           mkdir -p ansible/collections
-          test -f ansible/collections/requirements.yml || cat > ansible/collections/requirements.yml <<'EOF'
-          ---
-          collections:
-            - name: community.zabbix
-          EOF
+          if [ ! -f ansible/collections/requirements.yml ]; then
+            printf '%s\n' '---' 'collections:' '  - name: community.zabbix' > ansible/collections/requirements.yml
+          fi
 
       - name: Install Galaxy collections
         run: |
@@ -42,5 +40,5 @@ jobs:
       - name: Lint (ansible-lint)
         run: ansible-lint -c .ansible-lint.yml ansible/playbooks/site.yml
 
-      - name: YAML lint (your code only)
+      - name: YAML lint (project code only)
         run: yamllint -c .yamllint ansible/playbooks ansible/roles ansible/group_vars
