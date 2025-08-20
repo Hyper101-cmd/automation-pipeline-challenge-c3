@@ -8,14 +8,27 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
     env:
       ANSIBLE_CONFIG: ansible/ansible.cfg
       ANSIBLE_COLLECTIONS_PATH: ${{ github.workspace }}/ansible/collections
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
+      # Cache pip packages
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: pip-${{ runner.os }}-${{ hashFiles('**/requirements*.txt') }}
+          restore-keys: |
+            pip-${{ runner.os }}-
 
       - name: Install ansible & linters
         run: |
@@ -23,30 +36,29 @@ jobs:
           pip install --user ansible-core ansible-lint yamllint
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
 
-      - name: Create Galaxy requirements if missing
-        if: ${{ hashFiles('ansible/collections/requirements.yml') == '' }}
-        run: |
-          mkdir -p ansible/collections
-          printf "%s\n" "---" "collections:" "  - name: community.zabbix" \
-            > ansible/collections/requirements.yml
+      # Cache Galaxy collections
+      - name: Cache Galaxy collections
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.ANSIBLE_COLLECTIONS_PATH }}
+          key: galaxy-${{ runner.os }}-${{ hashFiles('ansible/collections/requirements.yml') }}
+          restore-keys: |
+            galaxy-${{ runner.os }}-
 
       - name: Install Galaxy collections
         run: |
           ansible-galaxy collection install \
             -r ansible/collections/requirements.yml \
             -p "$ANSIBLE_COLLECTIONS_PATH"
-          ansible-galaxy collection list
+
+      # Fast playbook syntax check (catches missing roles early)
+      - name: Ansible syntax-check
+        run: |
+          ansible-playbook -i ansible/inventories/localhost.ini --syntax-check ansible/playbooks/site.yml
 
       - name: Lint (ansible-lint)
         run: ansible-lint -c .ansible-lint.yml ansible/playbooks/site.yml
 
       - name: YAML lint (project code only)
         run: |
-          paths=(ansible/playbooks ansible/roles ansible/group_vars)
-          keep=()
-          for p in "${paths[@]}"; do [ -d "$p" ] && keep+=("$p"); done
-          if [ "${#keep[@]}" -gt 0 ]; then
-            yamllint -c .yamllint "${keep[@]}"
-          else
-            echo "No YAML directories found; skipping yamllint"
-          fi
+          yamllint -c .yamllint ansible/playbooks ansible/roles ansible/inventories
