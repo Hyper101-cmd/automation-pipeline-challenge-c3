@@ -3,5 +3,5 @@
   ansible.builtin.apt:
     update_cache: true
     upgrade: dist
-  register: pkg_update
+  register: maintenance_pkg_update
   notify: Reboot system

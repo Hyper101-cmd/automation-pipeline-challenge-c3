@@ -1,27 +1,15 @@
----
 - name: Ensure apt cache is up-to-date
-  become: true
   ansible.builtin.apt:
     update_cache: true
   when: ansible_facts['pkg_mgr'] is not defined or ansible_facts['pkg_mgr'] == 'apt'
 
-- name: Ensure ssl-cert package (Debian/Ubuntu provides snake-oil cert)
-  become: true
-  ansible.builtin.apt:
-    name: ssl-cert
-    state: present
-    update_cache: true
-  when: (ansible_facts.os_family | default('')) == 'Debian'
-
 - name: Install nginx
-  become: true
   ansible.builtin.apt:
     name: nginx
     state: present
     update_cache: true
 
 - name: Ensure directories for SSL exist
-  become: true
   ansible.builtin.file:
     path: "{{ item.path }}"
     state: directory
@@ -29,73 +17,74 @@
     owner: root
     group: "{{ item.group | default('root') }}"
   loop:
-    - { path: /etc/ssl/certs, mode: '0755' }
-    - { path: /etc/ssl/private, mode: '0710', group: ssl-cert }
+    - path: /etc/ssl/certs
+      mode: '0755'
+    - path: /etc/ssl/private
+      mode: '0710'
+      group: ssl-cert
 
-# Skip cert/key file copies in --check to avoid /etc/ssl/private permission issues during dry-runs
-- name: Deploy certificate from remote (skipped in check mode)
+- name: Ensure ssl-cert package (creates snake-oil certs on Debian/Ubuntu)
+  ansible.builtin.apt:
+    name: ssl-cert
+    state: present
+    update_cache: true
+  when: ansible_facts.os_family | default('') == 'Debian'
+
+- name: Check cert/key sources on remote
   become: true
+  ansible.builtin.stat:
+    path: "{{ item }}"
+    get_checksum: false
+  register: nginx_cert_key_src_stats
+  loop:
+    - "{{ ssl_cert_src | default('/etc/ssl/certs/ssl-cert-snakeoil.pem') }}"
+    - "{{ ssl_key_src | default('/etc/ssl/private/ssl-cert-snakeoil.key') }}"
+
+- name: Set cert/key src facts
+  ansible.builtin.set_fact:
+    nginx_cert_src_exists: "{{ nginx_cert_key_src_stats.results[0].stat.exists | default(false) }}"
+    nginx_key_src_exists: "{{ nginx_cert_key_src_stats.results[1].stat.exists | default(false) }}"
+
+- name: Deploy certificate from remote
   ansible.builtin.copy:
     src: "{{ ssl_cert_src | default('/etc/ssl/certs/ssl-cert-snakeoil.pem') }}"
-    dest: "{{ ssl_cert_path | default('/etc/ssl/certs/mediaapp-selfsigned.crt') }}"
+    dest: "{{ ssl_cert_path }}"
     owner: root
     group: root
     mode: '0644'
     remote_src: true
-  when: not ansible_check_mode and ansible_service_mgr == "systemd"
+  when: nginx_cert_src_exists | bool
   notify: Reload nginx
 
-- name: Deploy private key from remote (skipped in check mode)
-  become: true
+- name: Deploy certificate from role/controller
+  ansible.builtin.copy:
+    src: "{{ ssl_cert_src | default('files/selfsigned.crt') }}"
+    dest: "{{ ssl_cert_path }}"
+    owner: root
+    group: root
+    mode: '0644'
+    remote_src: false
+  when: not (nginx_cert_src_exists | bool)
+  notify: Reload nginx
+
+- name: Deploy private key from remote
   ansible.builtin.copy:
     src: "{{ ssl_key_src | default('/etc/ssl/private/ssl-cert-snakeoil.key') }}"
-    dest: "{{ ssl_key_path | default('/etc/ssl/private/mediaapp-selfsigned.key') }}"
+    dest: "{{ ssl_key_path }}"
     owner: root
     group: ssl-cert
     mode: '0640'
     remote_src: true
-  when: not ansible_check_mode and ansible_service_mgr == "systemd"
+  when: nginx_key_src_exists | bool
   notify: Reload nginx
 
-- name: Deploy nginx site config
-  become: true
-  ansible.builtin.template:
-    src: "templates/site.conf.j2"
-    dest: "/etc/nginx/sites-available/{{ app_name | default('mediaapp') }}.conf"
+- name: Deploy private key from role/controller
+  ansible.builtin.copy:
+    src: "{{ ssl_key_src | default('files/selfsigned.key') }}"
+    dest: "{{ ssl_key_path }}"
     owner: root
-    group: root
-    mode: '0644'
+    group: ssl-cert
+    mode: '0640'
+    remote_src: false
+  when: not (nginx_key_src_exists | bool)
   notify: Reload nginx
-
-- name: Enable site
-  become: true
-  ansible.builtin.file:
-    src: "/etc/nginx/sites-available/{{ app_name | default('mediaapp') }}.conf"
-    dest: "/etc/nginx/sites-enabled/{{ app_name | default('mediaapp') }}.conf"
-    state: link
-    force: true
-  notify: Reload nginx
-
-- name: Remove default site (optional)
-  become: true
-  ansible.builtin.file:
-    path: /etc/nginx/sites-enabled/default
-    state: absent
-  notify: Reload nginx
-
-# These also need systemd; skip in --check to avoid failures on WSL/containers/dry-runs
-- name: Test nginx config
-  become: true
-  ansible.builtin.command: nginx -t
-  register: nginx_test
-  changed_when: false
-  failed_when: nginx_test.rc != 0
-  when: not ansible_check_mode and ansible_service_mgr == "systemd"
-
-- name: Ensure Nginx is running and enabled
-  become: true
-  ansible.builtin.service:
-    name: nginx
-    state: started
-    enabled: true
-  when: not ansible_check_mode and ansible_service_mgr == "systemd"
