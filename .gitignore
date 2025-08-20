@@ -68,3 +68,5 @@ ansible/roles/nginx/tasks/main.yml.bak
 !/.github
 !/.github/**
 !ansible/collections/requirements.yml
+!ansible/collections/
+!ansible/collections/requirements.yml
