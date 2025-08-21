@@ -306,3 +306,5 @@ This project is licensed under the MIT License.
 # trigger linguist refresh
 
 Note: Local validation works without extra setup.
+
+<!-- lint demo -->
