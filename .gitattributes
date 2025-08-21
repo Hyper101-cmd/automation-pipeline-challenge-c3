@@ -30,3 +30,5 @@ ansible/collections/** linguist-vendored
 docs/** linguist-documentation
 ansible/collections/** linguist-vendored
 docs/** linguist-documentation
+ansible/collections/** linguist-vendored
+docs/** linguist-documentation
