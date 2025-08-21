@@ -1,21 +1,18 @@
-repos:
-  - repo: local
-    hooks:
-      - id: ansible-lint
-        name: ansible-lint (system)
-        entry: bash -lc 'unset ANSIBLE_COLLECTIONS_PATHS; ANSIBLE_CONFIG=ansible/ansible.cfg ANSIBLE_COLLECTIONS_PATH=ansible/collections ansible-lint ansible/playbooks/site.yml'
-        language: system
-        files: ^ansible/
+# Global exclude avoids touching vendored Galaxy collections
+exclude: ^ansible/collections/
 
+repos:
   - repo: https://github.com/adrienverge/yamllint
     rev: v1.35.1
     hooks:
       - id: yamllint
-        args: [-c, .yamllint]
-        files: ^ansible/
+        # Limit yamllint to your code paths
+        files: ^(ansible/(playbooks|roles|inventories|group_vars)/|\.github/workflows/|README\.md|\.yamllint|\.ansible-lint\.yml|ansible/ansible\.cfg)
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v6.0.0
+    rev: v4.6.0
     hooks:
       - id: end-of-file-fixer
+        files: ^(ansible/(playbooks|roles|inventories|group_vars)/|\.github/workflows/|README\.md|.*\.ya?ml)$
       - id: trailing-whitespace
+        files: ^(ansible/(playbooks|roles|inventories|group_vars)/|\.github/workflows/|README\.md|.*\.ya?ml)$

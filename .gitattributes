@@ -26,3 +26,9 @@ ansible/temp/** linguist-generated
 
 # Don’t let Helm templates be misclassified as Go
 helm/** linguist-language=YAML
+ansible/collections/** linguist-vendored
+docs/** linguist-documentation
+ansible/collections/** linguist-vendored
+docs/** linguist-documentation
+ansible/collections/** linguist-vendored
+docs/** linguist-documentation
