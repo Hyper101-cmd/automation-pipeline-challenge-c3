@@ -1,1 +1,0 @@
-../../docs/ZABBIX_REPO_ROLE.md

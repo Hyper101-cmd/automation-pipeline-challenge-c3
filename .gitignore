@@ -70,3 +70,6 @@ ansible/roles/nginx/tasks/main.yml.bak
 !ansible/collections/requirements.yml
 !ansible/collections/
 !ansible/collections/requirements.yml
+
+# don’t commit installed Galaxy content
+ansible/collections/ansible_collections/
